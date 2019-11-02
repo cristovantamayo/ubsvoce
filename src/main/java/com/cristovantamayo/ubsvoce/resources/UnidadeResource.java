@@ -1,0 +1,18 @@
+package com.cristovantamayo.ubsvoce.resources;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+
+// Endpoint da API 
+@RequestMapping(value="/v1")
+public class UnidadeResource {
+
+	@RequestMapping(method=RequestMethod.GET)
+	public String find_ubs() {
+		return "End Pointer!";
+	}
+	
+}
