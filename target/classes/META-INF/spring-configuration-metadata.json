@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "storage",
+      "type": "com.cristovantamayo.ubsvoce.services.storage.StorageProperties",
+      "sourceType": "com.cristovantamayo.ubsvoce.services.storage.StorageProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "storage.location",
+      "type": "java.lang.String",
+      "description": "Pasta para armazenar arquivos",
+      "sourceType": "com.cristovantamayo.ubsvoce.services.storage.StorageProperties"
+    }
+  ],
+  "hints": []
+}
