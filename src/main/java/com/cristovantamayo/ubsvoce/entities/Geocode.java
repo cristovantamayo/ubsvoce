@@ -29,7 +29,8 @@ public class Geocode implements Serializable {
 	@JsonProperty(value="long")
 	@Column(precision=7, scale=2)
 	private Double geocode_long;
-
+	
+	
 	@JsonBackReference // Evita que haja uma conversão recursiva das informações da Unidade na saida da API
 	@MapsId
 	@OneToOne

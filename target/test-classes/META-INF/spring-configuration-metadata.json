@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "name": "geocoding",
+      "type": "com.cristovantamayo.ubsvoce.services.GeocodingServiceTest",
+      "sourceType": "com.cristovantamayo.ubsvoce.services.GeocodingServiceTest"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}

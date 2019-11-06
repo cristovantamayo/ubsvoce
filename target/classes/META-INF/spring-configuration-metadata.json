@@ -1,12 +1,27 @@
 {
   "groups": [
     {
+      "name": "geocoding",
+      "type": "com.cristovantamayo.ubsvoce.services.GeocodingService",
+      "sourceType": "com.cristovantamayo.ubsvoce.services.GeocodingService"
+    },
+    {
       "name": "storage",
       "type": "com.cristovantamayo.ubsvoce.services.storage.StorageProperties",
       "sourceType": "com.cristovantamayo.ubsvoce.services.storage.StorageProperties"
     }
   ],
   "properties": [
+    {
+      "name": "geocoding.apiKey",
+      "type": "java.lang.String",
+      "description": "A description for 'geocoding.apiKey'"
+    },
+    {
+      "name": "google.geocoding.setApiKey",
+      "type": "java.lang.String",
+      "description": "A description for 'google.geocoding.setApiKey'"
+    },
     {
       "name": "storage.location",
       "type": "java.lang.String",

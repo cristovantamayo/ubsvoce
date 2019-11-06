@@ -13,7 +13,7 @@ public class StorageProperties {
     /**
      * Pasta para armazenar arquivos
      */
-    private String location = "upload-dir";
+    private String location;
     
     /**
      * Recupera o caminho do diretório root do Storage

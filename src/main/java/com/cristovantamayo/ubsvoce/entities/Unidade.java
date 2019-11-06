@@ -35,7 +35,6 @@ public class Unidade implements Serializable {
 	 * Relacionamento OneToOne Bidirecional:
 	 * https://developer.jboss.org/wiki/EntendendoMappedByDoHibernate
 	 */
-	
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL,  mappedBy = "unidade")
 	private Geocode geocode;
