@@ -30,6 +30,7 @@ import com.cristovantamayo.ubsvoce.services.exceptions.StorageFileNotFoundExcept
  */
 
 @Controller
+@RequestMapping(value="/config")
 public class FileUploadController {
 
 	private final StorageService storageService;

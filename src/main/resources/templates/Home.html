@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<head>
+		<title>UBS Voc&ecirc;</title>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<link rel="icon" th:href="@{/image/favicon.png}" />
+	
+		<!-- Bootstrap core CSS -->
+		<link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/webjars/open-iconic/font/css/open-iconic-bootstrap.min.css}" rel="stylesheet" />
+		
+		<!-- Custom styles for this template -->
+		<link th:href="@{/webjars/jquery-ui/1.4.1/jquery-easing.min.css}" rel="stylesheet" />
+		<link th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.css}" rel="stylesheet" />
+
+	</head>
+	
+	<body>
+		<div class="row-fluid gnd">
+			<div id="map">
+			</div>
+			<div class="menu shadow">
+				<nav>
+					<span class="logo" title="Unidade Básica de Saúde e Você!"><span>UBS</span> Voc&ecirc;</span><!--<button id="bt">go</button><button id="bt2">add</button> -->
+				</nav>		
+			</div>
+			<div id="flyer">
+				<div class="dformu sty shadow">
+					<nobr>
+						<div class="lupa lupabt" title="Buscar UBS"></div>
+						<div class="dtxt">
+							<input type="text" class="busca" id="txtBusca" placeholder="UBS do bairro..." />
+							<button>></button>
+						</div>
+					</nobr>
+				</div>
+				<div class="dlist">
+					<div class="dubs sty">
+					</div>
+				</div>
+			</div>
+			<div id="loaderGnd"></div>
+			<div id="loader"><div class="shadow"><span>BUSCANDO</span></div></div>
+		</div>
+		
+		<!-- Bootstrap core JavaScript
+	    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+		<script th:src="@{/webjars/jquery-easing-original/1.4.1/jquery.easing.min.js}"></script>
+		<script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+		<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/basic.js}"></script>
+
+		<script type="text/javascript">	
+			var map;
+			function initMap() {
+			  map = new google.maps.Map(document.getElementById('map'), {
+			    center: {lat:-23.561680, lng:-46.656102}, //{lat: -23.533773, lng: -46.625290}
+			    zoom: 15,
+			    mapTypeId: google.maps.MapTypeId.ROADMAP,
+			    streetViewControl: false,
+			    styles: [
+			        {
+			            "featureType": "administrative",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#d6e2e6"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "administrative",
+			            "elementType": "geometry.stroke",
+			            "stylers": [
+			                {
+			                    "color": "#cfd4d5"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "administrative",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "color": "#7492a8"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "administrative.neighborhood",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "lightness": 25
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "landscape.man_made",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#dde2e3"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "landscape.man_made",
+			            "elementType": "geometry.stroke",
+			            "stylers": [
+			                {
+			                    "color": "#cfd4d5"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "landscape.natural",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#dde2e3"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "landscape.natural",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "color": "#7492a8"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "landscape.natural.terrain",
+			            "elementType": "all",
+			            "stylers": [
+			                {
+			                    "visibility": "off"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#dde2e3"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "color": "#588ca4"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi",
+			            "elementType": "labels.icon",
+			            "stylers": [
+			                {
+			                    "visibility": "off"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi.park",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#a9de83"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi.park",
+			            "elementType": "geometry.stroke",
+			            "stylers": [
+			                {
+			                    "color": "#bae6a1"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi.sports_complex",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#c6e8b3"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "poi.sports_complex",
+			            "elementType": "geometry.stroke",
+			            "stylers": [
+			                {
+			                    "color": "#bae6a1"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "color": "#41626b"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road",
+			            "elementType": "labels.icon",
+			            "stylers": [
+			                {
+			                    "saturation": -45
+			                },
+			                {
+			                    "lightness": 10
+			                },
+			                {
+			                    "visibility": "on"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road.highway",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#c1d1d6"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road.highway",
+			            "elementType": "geometry.stroke",
+			            "stylers": [
+			                {
+			                    "color": "#a6b5bb"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road.highway",
+			            "elementType": "labels.icon",
+			            "stylers": [
+			                {
+			                    "visibility": "on"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road.highway.controlled_access",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#9fb6bd"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road.arterial",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#ffffff"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "road.local",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#ffffff"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "transit",
+			            "elementType": "labels.icon",
+			            "stylers": [
+			                {
+			                    "saturation": -70
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "transit.line",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#b4cbd4"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "transit.line",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "color": "#588ca4"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "transit.station",
+			            "elementType": "all",
+			            "stylers": [
+			                {
+			                    "visibility": "off"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "transit.station",
+			            "elementType": "labels.text.fill",
+			            "stylers": [
+			                {
+			                    "color": "#008cb5"
+			                },
+			                {
+			                    "visibility": "on"
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "transit.station.airport",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "saturation": -100
+			                },
+			                {
+			                    "lightness": -5
+			                }
+			            ]
+			        },
+			        {
+			            "featureType": "water",
+			            "elementType": "geometry.fill",
+			            "stylers": [
+			                {
+			                    "color": "#a6cbe3"
+			                }
+			            ]
+			        }
+			    ]
+			  });
+			}
+			
+			////////////////////////////////////////
+			
+			$(document).ready(function(){
+				
+				/*$("#bt").click(function(){
+					const center = new google.maps.LatLng(-23.0101377, -45.5551346);
+					map.panTo(center);
+					map.setZoom(15);
+					
+					var marker = new google.maps.Marker({
+				      position: new google.maps.LatLng(-23.533773, -46.625290),
+				      title: 'Casa',
+				      map: map
+					});
+				});
+				
+				$("#bt2").click(function(){
+					const center = new google.maps.LatLng(-23.0101377, -45.5551346);
+					var marker = new google.maps.Marker({
+				      position: center,
+				      title: 'Casa',
+				      map: map,
+				      icon: "image/green/1.png"	
+					});
+				});*/
+				
+				/*
+				 * Trabalando UX da busca
+				 */
+
+				// atribuia à 'Lupa' as  funcionalidades 'hover' do Formulario se TRUE, se FALSE remove as funcionalizades 
+				var setLupa = function($flag) {
+					if ($flag) {
+						// quando mouse sobre
+						$(".lupabt").hover(function() {
+							lupaControl();
+						// quando mouse sair	
+						}, function() {
+							lupaControl(true);
+						});
+					} else {
+						// desvinculando os listeners
+						$(".lupabt").unbind("mouseenter");
+						$(".lupabt").unbind("mouseleave");
+					}
+				};
+				// Ativa o 'hover' da 'Lupa'
+				setLupa(true);
+
+				// A 'Lupa' tem 2 estados possíveis: se TRUE o formulario se reduz a um botão, se False o Formulário aparece. 
+				var lupaControl = function($flag) {
+					// Se true
+					if ($flag) {
+						// estreita o formulario e o torna bem visivel
+						$("#flyer .dformu").css({
+							"width" : "50px",
+							"opacity" : "1",
+							"background-color": "#FF7F00"
+						});
+						// torna os elementos de busca invisiveis
+						$(".dformu .dtxt").css({
+							"opacity" : "0"
+						});
+					// se FALSE
+					} else {
+						// o formulario toma sua largura funcional, porem com visibilidade defazada.
+						$("#flyer .dformu").css({
+							"width" : "100%",
+							"opacity" : "0.8",
+							"background-color": "#294243"
+						});
+						// torna os elementos de busca visiveis.
+						$(".dformu .dtxt").css({
+							"opacity" : "1"
+						});
+					}
+				};
+				
+				// Clicando na 'Lupa' a funcionalidade 'hover' desaparece e o formulario permanece
+				$(".lupabt").click(function() {
+					// Força a visibilidade do fomulario
+					$("#flyer .dformu").css({
+						"opacity" : "1",
+						"background-color": "#294243"
+					});
+					// Remove o 'hover' da 'Lupa'
+					setLupa();
+					// Foca o campo de busca
+					$("#txtBusca").focus();
+				});
+				
+				/////////////////////////////////////
+
+				// Busca
+				var buscar = function(address){
+					
+					loaderIt(true);
+					
+					var $params = {
+						address: address,
+						page: 1,
+						per_page: 10
+					};
+					
+					// From: static/js/basic.js
+					// Busca o json
+					$.touch("/v1/find_ubs", $params, function($data){
+						
+						loaderIt();
+						
+						if($data.entries.length>0){
+							alert($data.entries.length);
+						}
+					});
+				}
+				
+				// Loader
+				var loaderIt = function($flag){
+					// Recuperando os elementos
+					var base		= $("#loader");
+					var loader 		= base.find("div");
+					var gnd			= $("#loaderGnd");
+
+					// Recuper o viewPort --> From: static/js/basic.js
+					//Retorna [width, height] do canvas disponivel
+					var view = getViewport();
+					
+					// preparando os valores ...
+					
+					// posicao inicial
+					
+					// posicao Y da da base
+					var $py = parseInt(view[1]/3);
+					
+					// exibir TRUE
+					if(undefined!=$flag){
+						
+						// posicao final
+						
+						// altura do loader
+						var $heightLoader = 200;
+						// posicao Y da da base
+						var $baseTop = parseInt((view[1] - $heightLoader) / 2);
+
+
+						gnd.css({display:"inherit", height:String(view[1]-56)+"px", top:"56px", opacity: 0.50});
+						base.css({"display": "inherit", "opacity":0, "margin-top":$baseTop+"px"});
+						base.stop(true, false).animate({"opacity":0.92}, {duration:500, ease:"swing"});
+						var $tempo = 3000;
+						loader.css({"width":$heightLoader+"px", "height":$heightLoader+"px"});
+						$("#loader > div > span").stop(true, false).animate({opacity: 1}, {duration:$tempo, easing:"swing", complete:function(){
+							$("#loader > div > span").stop(true, false).animate({opacity: 0}, {duration:$tempo, easing:"swing", complete:function(){
+								$("#loader > div > span").stop(true, false).animate({opacity: 1}, {duration:$tempo, easing:"swing"});
+							}});
+						}});
+						$("#flyer").css({opacity: 0});
+					} else {
+						$("#flyer").css({opacity: 1});
+						base.stop(true, false).animate({"opacity":0}, {duration:300, ease:"easeOut",complete:function(){
+							base.css({"display": "none"});
+							$("#loader > div > span").stop(true, false).css({opacity: 0});
+						}});
+						gnd.css({display:"none"});
+					}
+					
+				};
+
+
+				// Eventos do Input[text] de Busca --> #txtBusca
+				
+				var setTxtBuscaBehaviours = function(){
+					// Quando o campo de busta perder o Foco...
+					$("#txtBusca").unbind("blur").blur(function(e) {
+						e.preventDefault();
+						// Se estiver vaziu
+						if (trimAll($(this).val()).length == 0) {
+							// Ativa a funcionalidade 
+							setLupa(true);
+							// Tranforma o formulario em um botao
+							lupaControl(true);
+						}
+					});
+					
+					// Ao se precionada as teclas
+					$("#txtBusca").unbind("keyup").keyup(function(e){
+						e.preventDefault();
+						// teclas de funcao e tecla alfanumerias
+						var x = event.which || event.keyCode;
+						
+						//Se o ENTER for precionado e o campo de busca nao estiver vazio.
+						if(x == 13 && trimAll($("#txtBusca").val()).length>0){
+							buscar($("#txtBusca").val());
+						}
+					});
+
+					$(".dtxt button").unbind("click").click(function(e){
+						e.preventDefault();
+						buscar($("#txtBusca").val());
+					});
+
+
+				};
+
+				setTxtBuscaBehaviours();
+				
+			});
+		</script>
+    	<script th:src="'https://maps.googleapis.com/maps/api/js?key='+ ${apiKey} +'&callback=initMap'" async defer></script>
+	</body>
+</html>

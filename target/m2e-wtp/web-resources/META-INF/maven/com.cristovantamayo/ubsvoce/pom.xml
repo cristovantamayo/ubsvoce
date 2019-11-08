@@ -105,7 +105,8 @@
 			<version>2.4</version>
 		</dependency>
 
-		<!-- Dependencia para utilizar o application.properties em proveito próprio, personalizado. -->
+		<!-- Dependencia para utilizar o application.properties em proveito próprio, 
+			personalizado. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -144,6 +145,18 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
 			<version>3.4.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>jquery-easing-original</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>jquery-ui</artifactId>
+			<version>1.12.1</version>
 		</dependency>
 
 		<dependency>

@@ -56,7 +56,7 @@ public class GeocodingServiceTest {
     	item.setUnidade(unidade);
     	score.setUnidade(unidade);
     	
-    	assertTrue(GeocodingService.isNear(item, -23.564515, -46.651825));
+    	assertTrue(GeocodingService.isNear(unidade, -23.564515, -46.651825, 1500.0));
     }
     
     @Test

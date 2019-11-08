@@ -6,17 +6,26 @@ import com.cristovantamayo.ubsvoce.entities.Unidade;
 
 public class Estrutura {
 	
-	
+	private String address;
 	private Integer current_page;
 	private Integer per_page;
-	private Integer total_entries;
+	private long total_entries;
 	private List<Unidade> entries;
 	
-	public Estrutura(Integer current_page, Integer per_page, Integer total_entries, List<Unidade> entries) {
+	public Estrutura(String address,Integer current_page, Integer per_page, long total_entries, List<Unidade> entries) {
+		this.address = address;
 		this.current_page = current_page;
 		this.per_page = per_page;
 		this.total_entries = total_entries;
 		this.entries = entries;
+	}
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public Integer getCurrent_page() {
@@ -35,11 +44,11 @@ public class Estrutura {
 		this.per_page = per_page;
 	}
 
-	public Integer getTotal_entries() {
+	public long getTotal_entries() {
 		return total_entries;
 	}
 
-	public void setTotal_entries(Integer total_entries) {
+	public void setTotal_entries(long total_entries) {
 		this.total_entries = total_entries;
 	}
 

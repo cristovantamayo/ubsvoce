@@ -21,7 +21,6 @@ public class Local implements Serializable {
 	private String formatedAddress;
 	private Double lat;
 	private Double lng;
-	private Date searched_at;
 	
 	public Local() {
 		
@@ -31,7 +30,6 @@ public class Local implements Serializable {
 		this.formatedAddress = formatedAddress;
 		this.lat = lat;
 		this.lng = lng;
-		this.searched_at = searched_at;
 	}
 
 	public Long getId() {
@@ -64,14 +62,6 @@ public class Local implements Serializable {
 
 	public void setLng(Double lng) {
 		this.lng = lng;
-	}
-
-	public Date getSearched_at() {
-		return searched_at;
-	}
-
-	public void setSearched_at(Date searched_at) {
-		this.searched_at = searched_at;
 	}
 
 	@Override

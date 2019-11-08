@@ -3,6 +3,8 @@
  */
 html, body {
 	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 body {
@@ -17,22 +19,133 @@ li {
 
 .b{ border: 1px solid #F00; }
 
-.menu{
-	position:absolute;
-	top:0px; width:100%; height:56px;
-	background-color: #00CED5;
+textarea:focus, input:focus, select:focus {
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
 }
 
-#map{
-	position: relative;
-	width:100%; height:100%;
-	background-color: #EEE;
-}
 
 .layout-main{
 	height:90%; padding-top:40px;
 }
 
+
+
+/* 
+ * Elementos personalizados
+ */
+
+.gnd{
+	position: relative;
+	width:100%; height:100%;
+	background-color: #EEE;
+}
+
+#map {
+	height: 100%;
+}
+
+#flyer{
+	position:absolute;
+	left:0px;
+	top:0px;
+	margin-top:70px;;
+	margin-left:20px;;
+	width:100%;
+	max-width:350px;
+	transition: all 0.2s ease-out;
+}
+
+#flyer .sty {
+	background-color:#FF7F00;/*#294243;*/
+}
+
+#flyer .dformu {
+	height:50px; width:50px;
+	border-radius:7px;
+	overflow:hidden;
+	padding:0px 5px 0px 0px;
+	transition: all 0.2s ease-out;
+}
+
+.dformu .lupa {
+	position:relative;
+	width:27px; height:27px;
+	display:inline-block;
+	margin:12px 5px 0px 14px;
+	background:url("/image/lupa.png") no-repeat;
+}
+.dformu .dtxt{
+	display:inline-block; width:100%; overflow:hidden; opacity:0;
+	transition: all 0.2s ease-out;
+}
+.dformu .busca{
+	position: relative;
+	width:77%; min-width:180px;
+	background:none;
+	border:none; border-bottom: 1px solid #FFF;
+	color: #FFF;
+}::placeholder {
+  color: white;
+}
+dformu .busca: focus{
+	box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+}
+.dformu button{
+	position:absolute; bottom:10px;
+	display:inline-block;
+	background:none; border:none;
+	color: #CCC; font-weight:bold;
+}
+
+.lupabt{
+	cursor:pointer;
+}
+/** Loader da Busca **********/
+
+#loader{
+	position:absolute;
+	width:100%;
+	top:0px;
+	left:0px;
+	display:none;
+	opacity:0;
+} 
+
+#loader div{
+	position: relative;
+	width:200px; height:500px;
+	margin:0 auto;
+	border-radius: 100px;
+	border:2px;
+	background-color: #FFF;
+	background-image:url("/image/blooader.gif");
+	background-position: center;
+	background-repeat: no-repeat;
+	line-height: 200px; text-align: center;
+	font-size: 16px; font-weight: 300;
+	color: #777777;
+}
+
+#loader > div > span{
+	opacity: 0;
+}
+
+#loaderGnd{
+	position:absolute;
+	width:100%; height:100%;
+	top:0px; top:0px;
+	background-color: #CCC;
+	display:none;
+	opacity: 0;
+	transition: all 0.2s ease-out;
+}
+
+/**************************/
+ 
 .formbase{
 	position:relative;
 	height:200px; border: 1px solid #EEE;
@@ -48,11 +161,6 @@ li {
 .form:hover{
 	margin-top:45px;
 }
-
-
-/* 
- * Input file
- */
 .inputfile {
 	width: 0.1px;
 	height: 0.1px;
@@ -101,6 +209,13 @@ li {
 /*
  * Menu
  */
+ 
+.menu{
+	position:absolute;
+	top:0px; width:100%; height:56px;
+	background-color: #263F40;
+	opacity:0.98;
+}
 .logo {
 	position: relative;
 	color: #FFF !important;
@@ -108,6 +223,14 @@ li {
 	padding: 10px 10px 7px 8px;
 	text-shadow: 1px 1px 3px #008A91;
 	letter-spacing:-2px;
+	cursor:default; 
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
 .logo > span {
 	font-weight: bold;
