@@ -1,5 +1,12 @@
 package com.cristovantamayo.ubsvoce.entities;
-
+/**
+ * Entidade JPA Geocode
+ * Represensa uma UBS
+ * 		<Long> 		id
+ * 		<Double> 	geocode_lat
+ * 		<Double> 	geocode_long
+ * 		<Unidade> 	unidade {@code @OneToOne} {@see Unidade}
+*/
 import java.io.Serializable;
 
 import javax.persistence.Column;

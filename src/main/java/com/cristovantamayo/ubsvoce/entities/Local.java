@@ -1,5 +1,10 @@
 package com.cristovantamayo.ubsvoce.entities;
-
+/**
+ * Entidadde JPA Local
+ * TODO Em desenvolvimento
+ * Visa armazenar as consultas realizadas e formar um banco de Geocode
+ * para que sejam realizadas consulas de Geocodding locais, baixando assim os custo com as requisições à API do Google.
+ */
 import java.io.Serializable;
 import java.sql.Date;
 

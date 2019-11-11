@@ -1,5 +1,14 @@
 package com.cristovantamayo.ubsvoce.entities;
-
+/**
+ * Entidade JPA Score
+ * Represensa uma UBS
+ * 		<Long> 		id
+ * 		<Integer> 	name
+ * 		<Integer> 	city
+ * 		<Integer> 	neighborhod
+ * 		<Integer> 	telefone
+ * 		<Unidade> 	unidade {@code @OneToOne} {@see Unidade}
+*/
 import java.io.Serializable;
 
 import javax.persistence.Entity;

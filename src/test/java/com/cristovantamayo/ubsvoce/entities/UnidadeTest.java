@@ -25,7 +25,7 @@ public class UnidadeTest {
     {
 	     Geocode geocode = new Geocode(-23.9,  46.8);
 	     Score score = new Score(ScoreType.MEDIO_OU_ABAIXO, ScoreType.ACIMA, ScoreType.MEDIO_OU_ABAIXO, ScoreType.MEDIO_OU_ABAIXO);
-	     Unidade unidade = new Unidade("Unidade Principal", "Rua da Gruta, 1020", "Maimoré", "554167768000", geocode, score);
+	     Unidade unidade = new Unidade("Unidade Principal", "Rua da Gruta, 1020","Jd. Araruta", "Maimoré", "554167768000", geocode, score);
 	     geocode.setUnidade(unidade);
 	     score.setUnidade(unidade);
 	        
