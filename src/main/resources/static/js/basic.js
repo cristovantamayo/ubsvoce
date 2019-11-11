@@ -8,7 +8,7 @@ $(document).ready(function(e) {
 				$callback($data);
 			}).fail(function(e){
 				console.log('url: '+$url+' | error: ' + e.status);
-				//console.log(dump($params));
+				$callback(null);
 			}).done(function(e){
 				//alert("sucesso!");
 			}).always(function(e){
@@ -47,6 +47,11 @@ function trimAll(sString){
 	}
 	return sString;
 };
+
+function formatarTelefone(string){
+	string = string.replace(/\D/g,"");
+	return string.length ? ("("+String(string).substr(0, 2)+") " + String(string).substr(2, string.length-2) )  : "";
+}
 
 
 function dump(arr,level) {

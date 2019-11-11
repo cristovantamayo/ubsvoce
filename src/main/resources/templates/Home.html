@@ -16,392 +16,811 @@
 		<link th:href="@{/webjars/open-iconic/font/css/open-iconic-bootstrap.min.css}" rel="stylesheet" />
 		
 		<!-- Custom styles for this template -->
-		<link th:href="@{/webjars/jquery-ui/1.4.1/jquery-easing.min.css}" rel="stylesheet" />
-		<link th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}" rel="stylesheet" />
 		<link th:href="@{/css/style.css}" rel="stylesheet" />
 
 	</head>
 	
 	<body>
 		<div class="row-fluid gnd">
+			<!-- Mapa -->
 			<div id="map">
 			</div>
+			<!-- Menu superior -->
 			<div class="menu shadow">
 				<nav>
-					<span class="logo" title="Unidade Básica de Saúde e Você!"><span>UBS</span> Voc&ecirc;</span><!--<button id="bt">go</button><button id="bt2">add</button> -->
-				</nav>		
+					<div class="r wf" style="padding: 0px;">
+						<div class="col-xs-12">
+							<span class="logo no-select" title="Unidade Básica de Saúde e Você!"><span>UBS</span> Voc&ecirc;</span>
+						</div>
+						<input type="hidden" id="page" value="1" />
+						<input type="hidden" id="per_page" value="50" />
+					</div>
+				</nav>
 			</div>
+			<!-- sidebar flutuante -->
 			<div id="flyer">
+				<!-- formulario / botao -->
 				<div class="dformu sty shadow">
 					<nobr>
-						<div class="lupa lupabt" title="Buscar UBS"></div>
+						<!-- lupa -->
+						<div id="lupa" class="lupa lupabt" title="Buscar UBS" data-flag="0"></div>
 						<div class="dtxt">
-							<input type="text" class="busca" id="txtBusca" placeholder="UBS do bairro..." />
-							<button>></button>
+							<input type="text" class="busca" id="txtBusca" placeholder="Qual é o seu endereço?" />
+							<a href="#" id="btForm" class="bt-enter" title="Buscar"></a>
 						</div>
 					</nobr>
 				</div>
-				<div class="dlist">
-					<div class="dubs sty">
+				<div id="dlist" class="off">
+					<div class="dubs">
+						
+						<!--
+						<div class="ubsline"><div class="ilb le bbw">2</div><div class="ilb ld ldhs"><div class="lname ldd">POSTO DE PUERICULTURA ONDINA AMADEI BERINGHS</div><div class="ldistance ldd">800<br /><span>metros</span></div></div> <div id="checkout">Unidade mais Próxima</div> </div>
+						<div class="ubsline"><div class="ilb le bbr">2</div><div class="ilb ld ldhn bbr"><div class="lname ldd">POSTO DE PUERICULTURA ONDINA AMADEI BERINGHS</div><div class="ldistance ldd">0.8<br /><span>metros</span></div></div></div>
+						-->
+						
 					</div>
 				</div>
 			</div>
+			<!-- bandeja do loader -->
 			<div id="loaderGnd"></div>
+			<!-- loader -->
 			<div id="loader"><div class="shadow"><span>BUSCANDO</span></div></div>
+			<!-- Introducao -->
+			<div id="tutorial" class="no-select" title="Clique para continuar...">
+				<div class="mv"></div>
+				<div class="r wf">
+					<div class="tutotext r wf">
+						<div class="row">
+							<div class="col-lg-1 col-md-2 col-xs-1">&nbsp;</div>
+							<div class="col-lg-4 col-md-5 col-xs-10">
+								<div class="row-fluid">
+									<div class="col-xs-12 text-left tuto1 pl">ENCONTRE A</div>
+								</div>
+								<div class="row-fluid">
+									<div class="col-xs-12 text-center tuto2 ">UNIDADE B&Aacute;SICA DE SA&Uacute;DE</div>
+								</div>
+								<div class="row-fluid">
+									<div class="col-xs-12 text-right tuto1 pr"><nobr>MAIS PR&Oacute;XIMA DE VOC&Ecirc;</nobr></div>
+								</div>
+								<div class="row-fluid">
+									<div class="col-xs-12 text-right tuto3 ">CONTINUAR...</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
-		<!-- Bootstrap core JavaScript
-	    ================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<!-- Placed at the end of the document so the pages load faster -->
+		<!--jQuery -->
 		<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 		<script th:src="@{/webjars/jquery-easing-original/1.4.1/jquery.easing.min.js}"></script>
+		<script th:src="@{/webjars/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js}"></script>
+		<script th:src="@{/webjars/js-cookie/2.2.1/js.cookie.min.js}"></script>
 		<script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+		<!-- Bootstrap core JavaScript
+	    ================================================== -->
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+		<!-- ferramentas personalizada -->
 		<script th:src="@{/js/basic.js}"></script>
 
-		<script type="text/javascript">	
+		<script type="text/javascript">
+
+			/////////////////////////////////////////////////////////////////////////////////////////////
+			//// Instanciacao do MAPA ///////////////////////////////////////////////////////////////////
+			//
+			// Flag busca em curso, informa ao sistema se uma pesquisa esta em andamento
+			var emCursoFlag = false;
+			//
+			// Estilo do mapa
+			var $style = null;
+			//
+			///////////////////////////////////////////////
+			///////////////////////////////////////////////
+			// MAPA
 			var map;
 			function initMap() {
-			  map = new google.maps.Map(document.getElementById('map'), {
-			    center: {lat:-23.561680, lng:-46.656102}, //{lat: -23.533773, lng: -46.625290}
-			    zoom: 15,
-			    mapTypeId: google.maps.MapTypeId.ROADMAP,
-			    streetViewControl: false,
-			    styles: [
-			        {
-			            "featureType": "administrative",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#d6e2e6"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "administrative",
-			            "elementType": "geometry.stroke",
-			            "stylers": [
-			                {
-			                    "color": "#cfd4d5"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "administrative",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "color": "#7492a8"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "administrative.neighborhood",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "lightness": 25
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "landscape.man_made",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#dde2e3"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "landscape.man_made",
-			            "elementType": "geometry.stroke",
-			            "stylers": [
-			                {
-			                    "color": "#cfd4d5"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "landscape.natural",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#dde2e3"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "landscape.natural",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "color": "#7492a8"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "landscape.natural.terrain",
-			            "elementType": "all",
-			            "stylers": [
-			                {
-			                    "visibility": "off"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#dde2e3"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "color": "#588ca4"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi",
-			            "elementType": "labels.icon",
-			            "stylers": [
-			                {
-			                    "visibility": "off"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi.park",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#a9de83"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi.park",
-			            "elementType": "geometry.stroke",
-			            "stylers": [
-			                {
-			                    "color": "#bae6a1"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi.sports_complex",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#c6e8b3"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "poi.sports_complex",
-			            "elementType": "geometry.stroke",
-			            "stylers": [
-			                {
-			                    "color": "#bae6a1"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "color": "#41626b"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road",
-			            "elementType": "labels.icon",
-			            "stylers": [
-			                {
-			                    "saturation": -45
-			                },
-			                {
-			                    "lightness": 10
-			                },
-			                {
-			                    "visibility": "on"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road.highway",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#c1d1d6"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road.highway",
-			            "elementType": "geometry.stroke",
-			            "stylers": [
-			                {
-			                    "color": "#a6b5bb"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road.highway",
-			            "elementType": "labels.icon",
-			            "stylers": [
-			                {
-			                    "visibility": "on"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road.highway.controlled_access",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#9fb6bd"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road.arterial",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#ffffff"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "road.local",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#ffffff"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "transit",
-			            "elementType": "labels.icon",
-			            "stylers": [
-			                {
-			                    "saturation": -70
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "transit.line",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#b4cbd4"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "transit.line",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "color": "#588ca4"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "transit.station",
-			            "elementType": "all",
-			            "stylers": [
-			                {
-			                    "visibility": "off"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "transit.station",
-			            "elementType": "labels.text.fill",
-			            "stylers": [
-			                {
-			                    "color": "#008cb5"
-			                },
-			                {
-			                    "visibility": "on"
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "transit.station.airport",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "saturation": -100
-			                },
-			                {
-			                    "lightness": -5
-			                }
-			            ]
-			        },
-			        {
-			            "featureType": "water",
-			            "elementType": "geometry.fill",
-			            "stylers": [
-			                {
-			                    "color": "#a6cbe3"
-			                }
-			            ]
-			        }
-			    ]
-			  });
+				map = new google.maps.Map(document.getElementById('map'), {
+					center: {lat:-23.561680, lng:-46.656102}, // Avenida Paulista, 1000
+					zoom: 14,
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					streetViewControl: false,
+					styles: [
+						{
+							"featureType": "administrative",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#d6e2e6"
+								}
+							]
+						},
+						{
+							"featureType": "administrative",
+							"elementType": "geometry.stroke",
+							"stylers": [
+								{
+									"color": "#cfd4d5"
+								}
+							]
+						},
+						{
+							"featureType": "administrative",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"color": "#7492a8"
+								}
+							]
+						},
+						{
+							"featureType": "administrative.neighborhood",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"lightness": 25
+								}
+							]
+						},
+						{
+							"featureType": "landscape.man_made",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#dde2e3"
+								}
+							]
+						},
+						{
+							"featureType": "landscape.man_made",
+							"elementType": "geometry.stroke",
+							"stylers": [
+								{
+									"color": "#cfd4d5"
+								}
+							]
+						},
+						{
+							"featureType": "landscape.natural",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#dde2e3"
+								}
+							]
+						},
+						{
+							"featureType": "landscape.natural",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"color": "#7492a8"
+								}
+							]
+						},
+						{
+							"featureType": "landscape.natural.terrain",
+							"elementType": "all",
+							"stylers": [
+								{
+									"visibility": "off"
+								}
+							]
+						},
+						{
+							"featureType": "poi",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#dde2e3"
+								}
+							]
+						},
+						{
+							"featureType": "poi",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"color": "#588ca4"
+								}
+							]
+						},
+						{
+							"featureType": "poi",
+							"elementType": "labels.icon",
+							"stylers": [
+								{
+									"visibility": "off"
+								}
+							]
+						},
+						{
+							"featureType": "poi.park",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#a9de83"
+								}
+							]
+						},
+						{
+							"featureType": "poi.park",
+							"elementType": "geometry.stroke",
+							"stylers": [
+								{
+									"color": "#bae6a1"
+								}
+							]
+						},
+						{
+							"featureType": "poi.sports_complex",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#c6e8b3"
+								}
+							]
+						},
+						{
+							"featureType": "poi.sports_complex",
+							"elementType": "geometry.stroke",
+							"stylers": [
+								{
+									"color": "#bae6a1"
+								}
+							]
+						},
+						{
+							"featureType": "road",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"color": "#41626b"
+								}
+							]
+						},
+						{
+							"featureType": "road",
+							"elementType": "labels.icon",
+							"stylers": [
+								{
+									"saturation": -45
+								},
+								{
+									"lightness": 10
+								},
+								{
+									"visibility": "on"
+								}
+							]
+						},
+						{
+							"featureType": "road.highway",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#c1d1d6"
+								}
+							]
+						},
+						{
+							"featureType": "road.highway",
+							"elementType": "geometry.stroke",
+							"stylers": [
+								{
+									"color": "#a6b5bb"
+								}
+							]
+						},
+						{
+							"featureType": "road.highway",
+							"elementType": "labels.icon",
+							"stylers": [
+								{
+									"visibility": "on"
+								}
+							]
+						},
+						{
+							"featureType": "road.highway.controlled_access",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#9fb6bd"
+								}
+							]
+						},
+						{
+							"featureType": "road.arterial",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#ffffff"
+								}
+							]
+						},
+						{
+							"featureType": "road.local",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#ffffff"
+								}
+							]
+						},
+						{
+							"featureType": "transit",
+							"elementType": "labels.icon",
+							"stylers": [
+								{
+									"saturation": -70
+								}
+							]
+						},
+						{
+							"featureType": "transit.line",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#b4cbd4"
+								}
+							]
+						},
+						{
+							"featureType": "transit.line",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"color": "#588ca4"
+								}
+							]
+						},
+						{
+							"featureType": "transit.station",
+							"elementType": "all",
+							"stylers": [
+								{
+									"visibility": "off"
+								}
+							]
+						},
+						{
+							"featureType": "transit.station",
+							"elementType": "labels.text.fill",
+							"stylers": [
+								{
+									"color": "#008cb5"
+								},
+								{
+									"visibility": "on"
+								}
+							]
+						},
+						{
+							"featureType": "transit.station.airport",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"saturation": -100
+								},
+								{
+									"lightness": -5
+								}
+							]
+						},
+						{
+							"featureType": "water",
+							"elementType": "geometry.fill",
+							"stylers": [
+								{
+									"color": "#a6cbe3"
+								}
+							]
+						}
+					]
+				});
 			}
-			
-			////////////////////////////////////////
+			//
+			/////////////////// Instanciacao do MAPA - FIM ////////////////////////////////////////////
 			
 			$(document).ready(function(){
+				// Incial com o campo de busca vazio.
+				$("#txtBusca").val("");
 				
-				/*$("#bt").click(function(){
-					const center = new google.maps.LatLng(-23.0101377, -45.5551346);
-					map.panTo(center);
-					map.setZoom(15);
-					
+				///////// Funcoes auxiliares do comportamento do MAPA /////////////////////////////////
+				//
+				//
+				// Classificador de UBS por Estrelas
+				var getStars= function($rate){
+					var $returned = "<nobr title='"+$rate+" de 3' style='cursor:help;'>";
+					for(var i=0; i<3; i++){
+						if(i<$rate){
+							$returned+='<img src="https://img.icons8.com/color/24/000000/christmas-star.png">';
+						} else {
+							$returned+='<img src="https://img.icons8.com/material-outlined/24/000000/christmas-star.png">';
+						}
+					}
+					return $returned +'</nobr>';
+				}
+				//
+				// Instancias dos Marcadores Atuais
+				var $markersInstances = [];
+				//
+				// Define o mapa em todos os marcadores na matriz.
+				function setMapOnAll(map) {
+					for (var i = 0; i < $markersInstances.length; i++) {
+						$markersInstances[i].setMap(map);
+					}
+				}
+				//
+				// Numerador de UBS
+				// Atualmente #page está fixado em 1 e #per_page fixado em 50. "Logo 1-1=0" e, "0*50=0"
+				var $ubsCounter = 1 + ((parseInt($("#page").val()) - 1) * parseInt($("#per_page").val()));
+				//
+				/////////////////////////////////////////////////////
+				// Configurador das UBS /////////////////////////////
+				/////////////////////////////////////////////////////
+				var setUbs = function($ubs){
+					//
+					// Ponto da UBS no MAPA
+					const ponto = new google.maps.LatLng($ubs.geocode.lat, $ubs.geocode.long);
+					//
+					// Instancia o Marcador da UBS
 					var marker = new google.maps.Marker({
-				      position: new google.maps.LatLng(-23.533773, -46.625290),
-				      title: 'Casa',
-				      map: map
-					});
-				});
-				
-				$("#bt2").click(function(){
-					const center = new google.maps.LatLng(-23.0101377, -45.5551346);
-					var marker = new google.maps.Marker({
-				      position: center,
-				      title: 'Casa',
+				      position: ponto,
+				      title: $ubs.name,
 				      map: map,
-				      icon: "image/green/1.png"	
+				      icon: "image/markers/"+String($ubsCounter)+".png"
 					});
-				});*/
-				
-				/*
-				 * Trabalando UX da busca
-				 */
+					//
+					// Armazena a instancia do Marcador para posterior remocao
+					$markersInstances.push(marker);
+					//
+					// Conteudo informativo
+					var contentString = 
+					'<div id="ubs_'+$ubs.id+'">'+
+						'<div id="bodyContent">'+
+							'<h4>'+$ubs.name+'</h4>'+
+							'<table>'+
+								'<tr><td><b>Endereço:</b> </td><td>&nbsp;'+$ubs.address+'</td></tr>'+
+								'<tr><td><b>Bairro:</b> </td><td>&nbsp;'+$ubs.neighborhood+'</td></tr>'+
+								'<tr><td><b>Cidade:</b> </td><td>&nbsp;'+$ubs.city+'</td></tr>'+
+								'<tr><td><b>Telefone:</b> </td><td>&nbsp;'+formatarTelefone($ubs.phone)+'</td></tr>'+
+							'</table><br />'+
+							'<p><b>Classificação:</b></p>'+
+							'<table>'+
+								'<tr><td>Instalações: </td><td>'+getStars($ubs.score.size)+'</td></tr>'+
+								'<tr><td>Adapt Idosos: </td><td>'+getStars($ubs.score.adaptation_for_senior)+'</td></tr>'+
+								'<tr><td>Equipamentos: </td><td>'+getStars($ubs.score.medical_equipment)+'</td></tr>'+
+								'<tr><td>Medicamentos: </td><td>'+getStars($ubs.score.medicine)+'</td></tr>'+
+							'</table>'+
+						'</div>'+
+					'</div>';
+					//
+					// Instancia a Janela e atribui o conteudo
+					var infowindow = new google.maps.InfoWindow({
+						content: contentString
+					});
+					//
+					// Adicio cliqie no Marcador
+					marker.addListener("click", function(){
+						infowindow.open(map, marker);
+					});
+					//
+					// Prepara o ranking de proximidade na lateral esquerda.
+					addUbsline($ubs, $ubsCounter);
+					//
+					// Numerador das UBS
+					$ubsCounter++;
+				};
+				//
+				// Remove todos as Instancia de marcadores previamente coletadas.
+				var removeMarcadores = function(){
+					setMapOnAll(null);
+				};
+				//
+				// Funcao auxiliar para quebra endereco em linhas
+				var splipAndLineIt = function($addressFromGoogle){
+					var $lines = String($addressFromGoogle).split(",");
+					var $formattedNewAddress = '<p><b>Buscando:</b></p>';
+					for($line in $lines){
+						$formattedNewAddress +=trimAll($lines[$line])+'<br>';
+					}
+					return String($formattedNewAddress).substr(0, $formattedNewAddress.length-4).replace("<br>", ", ");
+				}
+				//
+				// Posiciona o Mapa
+				var gotoCoordenates = function($geocode, $enderecoDeBusca){
+					//
+					// Ponto central do Mapa
+					const center = new google.maps.LatLng($geocode.lat, $geocode.lng);
+					//
+					// Marcador representando o usuario
+					var usuarioMaker = new google.maps.Marker({
+						position: center,
+						title: "Esta é sua Localização",
+						map: map,
+						zIndex: 1000,
+						icon: "/image/markers/user.png"
+					});
+					//
+					// Armazena a instancia do Marcador para posterior remocao
+					$markersInstances.push(usuarioMaker);
+					//
+					// Conteudo com o Endereco buscando
+					var $userContent = '<div id="bodyContent">'+splipAndLineIt($enderecoDeBusca)+'</div>';
+					//
+					// Instancia a Janela e atribui o conteudo
+					var infowindow = new google.maps.InfoWindow({
+						content: $userContent
+					});
+					//
+					// Adicio cliqie no Marcador
+					usuarioMaker.addListener("click", function(){
+						infowindow.open(map, usuarioMaker);
+					});
+					//
+					// Centraliza o MAPA
+					map.panTo(center);
+					// Seta o ZOOM
+					map.setZoom(14);
+				}
+				//
+				// Funcao que troca a comuta as funcoes do btForm: TRUE se bt-close, ANY OTHER ELSE bt-enter 
+				var changeFormBt = function($flag){
+					var bt = $("#btForm");
+					if(true == $flag){
+						bt.removeClass("bt-enter");
+						bt.addClass("bt-close");
+						bt.attr("title", "Limpar!");
+						bt.unbind("click").click(function(e){
+							e.preventDefault();
 
+							if(emCursoFlag==true){
+								if(!window.confirm("Você está prestes a descarta a pesquisa altual.\nDeseja prosseguir?")) return false;
+								removeRanking();
+								removeMarcadores();
+							}
+							//
+							// Desarma o timeToLeave
+							clearTimeout($timeToLeave);
+							$("#txtBusca").val("");
+							$("#txtBusca").focus();
+						});
+					} else {
+						bt.removeClass("bt-close");
+						bt.addClass("bt-enter");
+						bt.attr("title", "Burcar");
+						bt.unbind("click").click(function(e){
+							e.preventDefault();
+							buscar($("#txtBusca").val());
+						});
+					}
+				};
+				//
+				////////////// Funcoes auxiliares - FIM ///////////////////////////////////////////
+
+				///// Busca das UBS na API /////////////////////////////////////////////////////////
+				//
+				var buscar = function(address){
+					//
+					// ativa o loader
+					loaderIt(true);
+					//
+					// Argumentos de Pesquisa
+					var $params = {
+						address: address,
+						radius: 3000,
+						page: 1,
+						per_page: 50
+					};
+					//
+					// Seta o elemento html #page pois é a referencia de paginacao
+					// para os Marcadores das UBSs
+					// OBS: Esta nao eh um implementacao definitiva, pois nao ha
+					//		ainda qualquer elemento que possibilite modificar 'page'.
+					//		No momento page só pode ser ajustado amnualmento nos $params acima.
+					$("#page").val($params.page);
+					$("#per_page").val($params.per_page);
+					//
+					// From: static/js/basic.js
+					// Busca o json na API
+					$.touch("/v1/find_ubs", $params, function($data){
+						//
+						// desativa o loader
+						loaderIt();
+						//
+						// Testa o conteudo
+						if(undefined==$data || null==$data){
+							alert("Nada encontrado!");
+							return false;
+						}
+						//
+						// Recupera endereco formal
+						var $buscandoPor = $data.address;
+						// Recupera total encontrado
+						var $totalEncontrado = $data.total_entries;
+						//
+						// Havendo UBS
+						if($data.entries.length>0){
+							//
+							// Sinaliza busca em Curso
+							emCursoFlag = true;
+							//
+							// remove os Marcadores da Consulta anterior
+							removeMarcadores();
+							//
+							// Move o mapa para as coordenadas
+							gotoCoordenates($data.geocode, $buscandoPor);
+							//
+							// Prepara o contador
+							$ubsCounter = 1;
+							//
+							// adicionando os Marcadores das UBS
+							for(var $i=0; $i<$data.total_entries; $i++){
+								setUbs($data.entries[$i]);
+								
+								// apos a ultima UBS
+								if($i+1==$data.total_entries){
+									showRanking($data.total_entries);
+								}
+							}
+							//
+							// Ativa o botao limpar do campo de busca
+							changeFormBt(true);
+						} else {
+							alert("Não há UBSs na localidade!");
+						}
+					});
+				}
+				//
+				////////////// Busca das UBS na API - FIM //////////////////////////////////////////
+
+				///// Preloader da Busca ////////////////////////////////////////////////////////////
+				//
+				var loaderIt = function($flag){
+					// Recuperando os elementos
+					var base		= $("#loader");
+					var loader 		= base.find("div");
+
+					// Recuper o viewPort --> From: static/js/basic.js
+					//Retorna [width, height] do canvas disponivel
+					var view = getViewport();
+					
+					// exibir TRUE
+					if(undefined!=$flag){
+						
+						// altura do loader
+						var $heightLoader = 200;
+						// posicao Y da da base
+						var $baseTop = parseInt((view[1] - $heightLoader) / 2);
+
+						// posiciona o div para cobrir toda area util do canvas
+						$("#loaderGnd").css({display:"inherit", height:String(view[1]-56)+"px", top:"56px", opacity: 0.50});
+						// Seta condicao inicial do loader
+						base.css({"display": "inherit", "opacity":0, "margin-top":$baseTop+"px"});
+						// Exibe o loader
+						base.stop(true, false).animate({"opacity":0.92}, {duration:500, ease:"swing"});
+						// Efeito do texto "BUSCANDO"
+						var $tempo = 3000;
+						loader.css({"width":$heightLoader+"px", "height":$heightLoader+"px"});
+						$("#loader > div > span").stop(true, false).animate({opacity: 1}, {duration:$tempo, easing:"swing", complete:function(){
+							$("#loader > div > span").stop(true, false).animate({opacity: 0}, {duration:$tempo, easing:"swing", complete:function(){
+								$("#loader > div > span").stop(true, false).animate({opacity: 1}, {duration:$tempo, easing:"swing"});
+							}});
+						}});
+						// Tira a visibilidade do formulario lateral
+						$("#flyer").css({opacity: 0});
+					} else {
+						// Retorna a visibilidade do formulario lateral
+						$("#flyer").css({opacity: 1});
+						// Remove o loader
+						base.stop(true, false).animate({"opacity":0}, {duration:300, ease:"easeOutQuad",complete:function(){
+							base.css({"display": "none"});
+							$("#loader > div > span").stop(true, false).css({opacity: 0});
+						}});
+						// oculta do div que cobre a area util do canvas
+						$("#loaderGnd").css({display:"none"});
+					}
+					
+				};
+				//
+				///////// Preloader da Busca - FIM //////////////////////////////////////////////////
+
+				/////////////////////////////////////////////////////////////////////////////////////
+				// TUTORIAL
+				//
+				// remove
+				var removeTutorial = function(){
+					$("#tutorial").fadeOut("slow", function(){
+						this.remove();
+					});
+				};
+				//
+				// Inicial
+				var timer=null;
+				var tutorialInit = function($flag){
+					//
+					// Limpa do Temporizador do Tutorial
+					clearTimeout(timer);
+					//
+					// Prepara os elemento
+					var tutorial = $("#tutorial .mv");
+					var base = $("#tutorial");
+					var texto = $(".tutotext");
+					//
+					// Recuper o viewPort --> From: static/js/basic.js
+					//Retorna [width, height] do canvas disponivel
+					var view = getViewport();
+					//
+					// Ajuste no canvas
+					base.css({height: String(view[1]-56)+"px", top:"56px", display: "inherit"});
+					//
+					// Posicionar texto
+					texto.css({"margin-top":String(parseInt(view[1]*0.20))+"px", opacity:0});
+					//
+					// condiçoes iniciais do background-image
+					tutorial.css({width:"100px", height:"100px", left:"-6px", top:"12px", opacity: 0});
+					//tutorial.css({display: "inherit", "background-size":"4300px 4300px", "background-position": "-2102px -2128px", opacity: 1});
+					//
+					// Animacao
+					tutorial.stop(true, false).animate({
+						width:"4300px", height:"4300px",
+						left:"-2102px", top:"-2128px",
+						opacity: 1},
+						{
+							duration:800,
+							easing: "easeOutQuad",
+							complete: function(){
+								
+								tutorial.css({opacity: 1});
+								$("#tutorial .mv").unbind("click").click(function(e){
+									e.preventDefault();
+									e.stopImmediatePropagation();
+									
+									removeTutorial();
+								});
+
+								texto.css({opacity:1});
+								texto.click(function(e){
+									e.preventDefault();
+									removeTutorial();
+								})
+								
+							}
+						}
+					);
+				}
+				//
+				if(undefined==Cookies.get("notnewer")){
+					Cookies.set("notnewer", "ok", { expires: 2});
+					timer = setTimeout(tutorialInit, 1500);
+				}
+				//
+				/////////// TUTORIAL - FIM ////////////////////////////////////////////////////////////
+				
+				////// Trabalando UX da busca /////////////////////////////////////////////////////////
+				//
+				// Temporizadir do Foco inicial
+				var $hoverTimer = null;
+				//	
+				// auxilia no foco rapido da busca.
+				var fastFocus = function(){
+					clearTimeout($hoverTimer);
+					$(".lupabt").trigger("click");
+				};
+				//
 				// atribuia à 'Lupa' as  funcionalidades 'hover' do Formulario se TRUE, se FALSE remove as funcionalizades 
 				var setLupa = function($flag) {
 					if ($flag) {
 						// quando mouse sobre
 						$(".lupabt").hover(function() {
 							lupaControl();
+							$hoverTimer = setTimeout(fastFocus, 400);
 						// quando mouse sair	
 						}, function() {
+							clearTimeout($hoverTimer);
 							lupaControl(true);
 						});
 					} else {
@@ -410,166 +829,246 @@
 						$(".lupabt").unbind("mouseleave");
 					}
 				};
+				//
 				// Ativa o 'hover' da 'Lupa'
 				setLupa(true);
-
+				//
 				// A 'Lupa' tem 2 estados possíveis: se TRUE o formulario se reduz a um botão, se False o Formulário aparece. 
 				var lupaControl = function($flag) {
 					// Se true
 					if ($flag) {
+						//
 						// estreita o formulario e o torna bem visivel
 						$("#flyer .dformu").css({
 							"width" : "50px",
 							"opacity" : "1",
 							"background-color": "#FF7F00"
 						});
+						//
 						// torna os elementos de busca invisiveis
 						$(".dformu .dtxt").css({
 							"opacity" : "0"
 						});
 					// se FALSE
 					} else {
+						//
 						// o formulario toma sua largura funcional, porem com visibilidade defazada.
 						$("#flyer .dformu").css({
 							"width" : "100%",
 							"opacity" : "0.8",
 							"background-color": "#294243"
 						});
+						//
 						// torna os elementos de busca visiveis.
 						$(".dformu .dtxt").css({
 							"opacity" : "1"
 						});
 					}
 				};
-				
+				//
 				// Clicando na 'Lupa' a funcionalidade 'hover' desaparece e o formulario permanece
 				$(".lupabt").click(function() {
-					// Força a visibilidade do fomulario
-					$("#flyer .dformu").css({
-						"opacity" : "1",
-						"background-color": "#294243"
-					});
+					//
+					// Desarma o timeToLeave
+					clearTimeout($timeToLeave);
+					//
 					// Remove o 'hover' da 'Lupa'
-					setLupa();
-					// Foca o campo de busca
+					if("0"==$(this).attr("data-flag")) {
+						// Força a visibilidade do fomulario
+						$("#flyer .dformu").css({
+							"opacity" : "1",
+							"background-color": "#294243"
+						});
+						//
+						// Remove o hover
+						setLupa();
+						//
+						// Sinalizada que a lupa foi clicada
+						$(this).attr("data-flag", "1");
+					}
+					//
+					// Limpa e Foca o campo de busca
 					$("#txtBusca").focus();
 				});
-				
-				/////////////////////////////////////
-
-				// Busca
-				var buscar = function(address){
-					
-					loaderIt(true);
-					
-					var $params = {
-						address: address,
-						page: 1,
-						per_page: 10
-					};
-					
-					// From: static/js/basic.js
-					// Busca o json
-					$.touch("/v1/find_ubs", $params, function($data){
-						
-						loaderIt();
-						
-						if($data.entries.length>0){
-							alert($data.entries.length);
-						}
-					});
-				}
-				
-				// Loader
-				var loaderIt = function($flag){
-					// Recuperando os elementos
-					var base		= $("#loader");
-					var loader 		= base.find("div");
-					var gnd			= $("#loaderGnd");
-
-					// Recuper o viewPort --> From: static/js/basic.js
-					//Retorna [width, height] do canvas disponivel
-					var view = getViewport();
-					
-					// preparando os valores ...
-					
-					// posicao inicial
-					
-					// posicao Y da da base
-					var $py = parseInt(view[1]/3);
-					
-					// exibir TRUE
-					if(undefined!=$flag){
-						
-						// posicao final
-						
-						// altura do loader
-						var $heightLoader = 200;
-						// posicao Y da da base
-						var $baseTop = parseInt((view[1] - $heightLoader) / 2);
-
-
-						gnd.css({display:"inherit", height:String(view[1]-56)+"px", top:"56px", opacity: 0.50});
-						base.css({"display": "inherit", "opacity":0, "margin-top":$baseTop+"px"});
-						base.stop(true, false).animate({"opacity":0.92}, {duration:500, ease:"swing"});
-						var $tempo = 3000;
-						loader.css({"width":$heightLoader+"px", "height":$heightLoader+"px"});
-						$("#loader > div > span").stop(true, false).animate({opacity: 1}, {duration:$tempo, easing:"swing", complete:function(){
-							$("#loader > div > span").stop(true, false).animate({opacity: 0}, {duration:$tempo, easing:"swing", complete:function(){
-								$("#loader > div > span").stop(true, false).animate({opacity: 1}, {duration:$tempo, easing:"swing"});
-							}});
-						}});
-						$("#flyer").css({opacity: 0});
-					} else {
-						$("#flyer").css({opacity: 1});
-						base.stop(true, false).animate({"opacity":0}, {duration:300, ease:"easeOut",complete:function(){
-							base.css({"display": "none"});
-							$("#loader > div > span").stop(true, false).css({opacity: 0});
-						}});
-						gnd.css({display:"none"});
+				//
+				//
+				/// Eventos do Input[text] de Busca --> #txtBusca 
+				//
+				// Timer to leave...
+				var $timeToLeave=null;
+				//
+				// Funcao auxiliar do blur event do txtBusca
+				var leaveIt = function(e){
+					// Se estiver vaziu
+					if (trimAll($("#txtBusca").val()).length == 0) {
+						// Ativa a funcionalidade 
+						setLupa(true);
+						// Tranforma o formulario em um botao
+						lupaControl(true);
+						//
+						// Sinalizada botao nao clicado
+						$(".lupabt").attr("data-flag", "0");
+						//
+						// Comuta o btForm para bt-enter
+						changeFormBt();
+						//
+						// Desarma o timeToLeave
+						clearTimeout($timeToLeave);
 					}
-					
 				};
-
-
-				// Eventos do Input[text] de Busca --> #txtBusca
-				
+				//
+				//Seta o comportamento do txtBusca
 				var setTxtBuscaBehaviours = function(){
 					// Quando o campo de busta perder o Foco...
 					$("#txtBusca").unbind("blur").blur(function(e) {
 						e.preventDefault();
-						// Se estiver vaziu
-						if (trimAll($(this).val()).length == 0) {
-							// Ativa a funcionalidade 
-							setLupa(true);
-							// Tranforma o formulario em um botao
-							lupaControl(true);
-						}
+						$timeToLeave = setTimeout(leaveIt, 300);
 					});
-					
+					//
 					// Ao se precionada as teclas
 					$("#txtBusca").unbind("keyup").keyup(function(e){
 						e.preventDefault();
 						// teclas de funcao e tecla alfanumerias
 						var x = event.which || event.keyCode;
-						
+						//
 						//Se o ENTER for precionado e o campo de busca nao estiver vazio.
 						if(x == 13 && trimAll($("#txtBusca").val()).length>0){
 							buscar($("#txtBusca").val());
 						}
+						//
+						// Testa o conteudo para saber o estado do btForm
+						
+						if($(this).val().length>0){
+							changeFormBt(true);
+						} else {
+							changeFormBt();
+						}
 					});
-
-					$(".dtxt button").unbind("click").click(function(e){
-						e.preventDefault();
-						buscar($("#txtBusca").val());
-					});
-
-
+					//
+					// Click do Botao de Busca
+					changeFormBt();
 				};
-
+				//
+				// Chama a funcao dos comportamentos
 				setTxtBuscaBehaviours();
-				
+				//
+				///////////////////////////////////// UX da busca -  FIm /////////////////////////////
+
+				/////////// Lista Lateral com Raking de proximidade //////////////////////////////////
+				//
+				var addUbsline = function(ubs, numeracao){
+					
+					var $templatePadrao = '<div id="ubsline_'+numeracao+'" class="ubsline" data-id="'+ubs.id+'"><div class="ilb le bbr">'+numeracao+'</div><div class="ilb ld ldhn bbr"><div class="lname ldd">'+ubs.name+'</div><div class="ldistance ldd">'+trataDistancia(ubs.distance)+'<br /><span>metros</span></div></div></div>';
+					var $templateWinner = '<div id="ubsline_'+numeracao+'" class="ubsline" data-id="'+ubs.id+'"><div class="ilb le bbw">2</div><div class="ilb ld ldhs"><div class="lname ldd">'+ubs.name+'</div><div class="ldistance ldd">'+trataDistancia(ubs.distance)+'<br /><span>metros</span></div></div> <div id="checkout">Unidade mais Próxima</div> </div>';
+					var $template =  1 == numeracao ? $templateWinner : $templatePadrao;
+					$("#dlist .dubs").append($template);
+				}
+				//
+				var trataDistancia = function($double){
+					return Math.round($double);
+				}
+				//
+				//	Inicia a exibição do Ranking de proximidade
+				var timerGndRanking = null
+				var addGndRaking = function(){
+					clearTimeout(timerGndRanking);
+					$("#dlist").css({"background-position":"-0px TOP", display: "inherit"});
+				}
+				var showRanking = function($maxCount){
+					//
+					// Prepara visibilidade de #dlidt
+					$("#dlist").css({"background-position":"-400px TOP", display: "inherit"});
+					//
+					// Prepara Visibilidade das .ubsline 
+					$(".ubsline").each(function(){
+						$(this).css({left: "-15px", opacity: 0, display: "inherit"});
+						// usbline lagura calculada
+						var width = $(this).width() -10 -45;
+						$(this).find(".ld").css({width: String(width)+"px"});
+						//
+						// lname largura controlada
+						$(this).find(".lname").each(function(){
+							$(this).css({"max-width":String($(".ubsline .ld").width()-70)+"px"});
+						});
+					});
+					$(".ubsline").each(function(){
+						$(this).css({left:"0px", opacity: 1});
+					});
+
+					timerGndRanking = setTimeout(addGndRaking, 600);
+
+					setSlimScroll();	
+
+				}
+				//
+				// Remover Ranking
+				var removeRanking = function(){
+					$('#dlist').fadeOut("fast", function(){
+						$('#dlist .dubs').html("");
+					});
+				}
+				//
+				/////////////////////////////////////////////////////////////////////////////////////
+
+				////////// Ajustas programatios do CSS ////////////////////////////////////////////////////////////////////////
+				//
+				//
+				var necessidaScroll = function(height){
+					// Perda de 130px + Winner 104 + (n-1) x 49px
+					var soma = 130 + 104 + ($("div.ubsline").length-1)*49;
+					console.log("-- necesita scroll ? -------------> "+ soma + " - " + height);
+					return soma > height ? true : undefined;
+				}
+				var setSlimScroll = function(){
+					var view = getViewport();
+					//
+					// Destroy e recriar scroll
+					$("#dlist").slimScroll({destroy: true});
+					// se necessario
+					if(necessidaScroll(view[1])){
+						$('#dlist').slimScroll({
+							color: '#555',
+							size: '8px',
+							height: String(view[1]-130-7)+'px',
+							railVisible: false
+						});
+						//deslocar o scroll um pouco para baixo
+						$(".slimScrollBar").css({top:'10px'});
+					}
+				}
+				//
+				//
+				var ajustRanking = function(){
+					var view = getViewport();
+					//
+					// dlist
+					var dlistHeight = view[1]-130;
+					$("#dlist").css({"max-height": String(dlistHeight)+"px"})
+					//
+					// usbline lagura calculada
+					var width = $(".ubsline").width() -10 -45;
+					$(".ubsline .ld").css({width: String(width)+"px"});
+					//
+					// lname largura controlada
+					$(".ubsline .lname").each(function(){
+						$(this).css({"max-width":String($(".ubsline .ld").width()-70)+"px"});
+					});
+					//
+					// ativar Scroll se necessario
+					setSlimScroll(view[1]);
+				};
+				//
+				// Ajuste a cada resize
+				var setter = function(){
+					ajustRanking();
+				}
+				$(window).resize(function(){
+					setter();
+				});
+				setter();
 			});
+
+			
 		</script>
     	<script th:src="'https://maps.googleapis.com/maps/api/js?key='+ ${apiKey} +'&callback=initMap'" async defer></script>
 	</body>
