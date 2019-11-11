@@ -1,5 +1,7 @@
 package com.cristovantamayo.ubsvoce.services;
-
+/**
+ * Classe de Serviço reponsavel por tratar a importação e transferência dos dados do arquivo UBS.csv
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -111,8 +113,7 @@ public class UnidadeService {
 	public boolean checkCSVHeader(String header) {
 		return true; //header.equals("vlr_latitude,vlr_longitude,cod_munic,cod_cnes,nom_estab,dsc_endereco,dsc_bairro,dsc_cidade,dsc_telefone,dsc_estrut_fisic_ambiencia,dsc_adap_defic_fisic_idosos,dsc_equipamentos,dsc_medicamentos");
 	}
-	
-	
+
 	
 	/**
 	 * Instancia a Unidade completa com base nos registro de entrada
@@ -157,6 +158,7 @@ public class UnidadeService {
 		Unidade unidade = new Unidade(
 				reg[4], 
 				reg[5], 
+				reg[6],
 				reg[7], 
 				reg[8],
 				geocode,
@@ -169,22 +171,4 @@ public class UnidadeService {
 		return unidade;
 	}
 
-	/**
-	 * Realiza a paginação dos registros na proporção <porPagina> e apresenta a atual <pagina>.
-	 * @param lista
-	 * @param pagina
-	 * @param porPagina
-	 * @return
-	 */
-	public Object paginator(List<Geocode> lista, Integer pagina, Integer porPagina ) {
-		
-		// Havendo itens
-		if(lista.size()>0) {
-			
-			
-			
-		}
-		
-		return null;
-	}
 }

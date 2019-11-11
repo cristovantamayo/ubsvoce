@@ -1,5 +1,10 @@
 package com.cristovantamayo.ubsvoce.controllers;
 
+/**
+ * Controller exclusivo para a sessão de upload
+ * Fornece os entrypoint para configuração inicial o aplicativo via http 
+ * @author Cristovan
+ */
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -25,10 +30,10 @@ import com.cristovantamayo.ubsvoce.services.StorageService;
 import com.cristovantamayo.ubsvoce.services.exceptions.StorageFileNotFoundException;
 
 /**
- * Controller exclusivo para a sessão de upload
+ * Forne acesso ao formulário de upload do CSV fonte de dados da aplicaçção
  * @author Cristovan
+ *
  */
-
 @Controller
 @RequestMapping(value="/config")
 public class FileUploadController {
@@ -82,7 +87,7 @@ public class FileUploadController {
                 "Você obteve sucesso ao enviar o arquivo " + file.getOriginalFilename() + "!");
         
         // retorna ao formulário
-        return "redirect:/import";
+        return "redirect:/config/import";
     }
 	
 	// Tratando exceções referente ao Storage
