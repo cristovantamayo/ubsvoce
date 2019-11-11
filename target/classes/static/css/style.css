@@ -12,12 +12,15 @@ body {
 	padding-left: 0;
 } 
 
-li {
+li { 
     list-style-type: none;
     text-indent:-45px;
 }
 
 .b{ border: 1px solid #F00; }
+.b2{ border: 1px solid #0F0; }
+.b3{ border: 1px solid #00F; }
+.b4{ border: 1px solid #F0F; }
 
 textarea:focus, input:focus, select:focus {
     box-shadow: 0 0 0 0;
@@ -39,7 +42,7 @@ textarea:focus, input:focus, select:focus {
 .gnd{
 	position: relative;
 	width:100%; height:100%;
-	background-color: #EEE;
+	background-color: #AAA;
 }
 
 #map {
@@ -53,12 +56,13 @@ textarea:focus, input:focus, select:focus {
 	margin-top:70px;;
 	margin-left:20px;;
 	width:100%;
-	max-width:350px;
+	max-width: 350px;
+	max-height: 96%;
 	transition: all 0.2s ease-out;
 }
 
 #flyer .sty {
-	background-color:#FF7F00;/*#294243;*/
+	background-color:#FF7F00;
 }
 
 #flyer .dformu {
@@ -82,28 +86,155 @@ textarea:focus, input:focus, select:focus {
 }
 .dformu .busca{
 	position: relative;
-	width:77%; min-width:180px;
+	width:75%; min-width:180px;
 	background:none;
 	border:none; border-bottom: 1px solid #FFF;
 	color: #FFF;
 }::placeholder {
   color: white;
 }
-dformu .busca: focus{
+.dformu .busca:focus{
 	box-shadow: 0 0 0 0;
-    border: 0 none;
     outline: 0;
 }
-.dformu button{
-	position:absolute; bottom:10px;
+
+#btForm{
+	display: inline-block;
+	position:absolute; top:10px;
+	width:22px; height:22px;
 	display:inline-block;
-	background:none; border:none;
-	color: #CCC; font-weight:bold;
+	background-color:#294243; border:none;
+	margin: 5px 0px 3px 10px;
+	transition: all 0.2s ease-out;
 }
+
+.bt-enter{
+	background-image:url("/image/bt-enter.png");
+	background-repeat: no-repeat;
+	opacity: 0.25;
+}
+
+.bt-enter:hover{ opacity: 0.4 !important; }
+.bt-close{
+	background-image:url("/image/bt-close.png");
+	background-repeat: no-repeat;
+	opacity: 0.25;
+}
+.bt-close:hover{ opacity: 0.4 !important; }
 
 .lupabt{
 	cursor:pointer;
 }
+
+/*** LISTAGEM DE UBS ***/
+#dlist{ margin:5px 0px 0px 0px;  font-size: 12px; overflow:hidden; background: url("/image/gnd-form.png") left top repeat-y; transition: all 0.3s ease-out;}
+#dlist .dubs {
+	padding: 0px 0px 4px 0px;
+	max-width:100%;
+}
+.ubsline {
+	position: relative;
+	width: 100%;
+	max-width:98%;
+	margin:2px 0px 0px 0px;
+	line-height: 0px;
+	background: none;
+	opacity: 1;
+	transition: all 0.3s ease-out;
+}
+.ubsline .ilb{
+	position: relative;
+	display: inline-block;
+	margin: 1px 2px 1px 2px;
+	box-shadow: #BBB 1px 1px 2px;
+	vertical-align: top;
+}
+.ubsline .le{
+	width:45px;
+	height:45px;
+	text-align: center; line-height: 43px;
+	color: #07A60D; font-weight: bold;
+	font-size:20px;
+}
+.ubsline .bbr{ background-color: white; border: 1px solid #DDD; }
+.ubsline .bbw{ background-color: #FF8000; border: 1px solid #FF8000; color:white !important; font-size: 22px !important; }
+
+.ubsline .ldhn{
+	height:45px;
+	background-color: white;
+}
+.ubsline .ldhs{
+	height:102px;
+	background: #FF8000 url("/image/slice-winner.png") center repeat-x;
+}
+
+.ubsline .ldd{
+	position: relative;
+	display: inline-block;
+	top:0px; vertical-align: top;
+
+}
+.ldhn .lname{
+	position: relative;
+	word-wrap: break-word !important;
+	overflow-wrap: break-word !important;
+	padding: 7px 5px 0px 8px;
+	font-size:12px;
+	line-height: 13px;
+	color:#333;
+}
+
+.ldhn .ldistance{
+	position: absolute;
+	width:70px; height:45px; top:0px;
+	line-height: 16px;
+	font-size: 18px; font-weight: bold; color: #07A60D;
+	text-align: center;
+	right:0px;
+	padding:7px 10px 0px 0px;
+}
+.ldhn .ldistance span{
+	position: relative; top:-3px;
+	line-height: 10px !important;
+	font-size: 12px !important;
+}
+
+.ldhs .lname{
+	position: relative;
+	word-wrap: break-word !important;
+	overflow-wrap: break-word !important;
+	padding: 7px 5px 0px 8px;
+	font-size:12px;
+	line-height: 13px;
+	color:#FFF; font-weight: 700;
+}
+
+.ldhs .ldistance{
+	position: absolute;
+	width:70px; height:45px; top:0px;
+	line-height: 16px; text-align: center;
+	font-size: 18px; font-weight: bold; color: #FFF;
+	right:0px;
+	padding:17px 10px 0px 0px;
+}
+.ldhs .ldistance span{
+	position: relative; top:-3px;
+	line-height: 10px !important;
+	font-size: 12px !important;
+}
+
+#checkout{
+	position: absolute;
+	font-size: 14px; font-weight: bold; color: #D83500;
+	background: url("/image/checkout.png") no-repeat right bottom;
+	padding: 30px;
+	bottom: -4px; right:-1px;
+	text-shadow:#A93 1px 1px 3px;
+}
+
+
+
+
 /** Loader da Busca **********/
 
 #loader{
@@ -122,7 +253,7 @@ dformu .busca: focus{
 	border-radius: 100px;
 	border:2px;
 	background-color: #FFF;
-	background-image:url("/image/blooader.gif");
+	background-image:url("/image/loader.svg");
 	background-position: center;
 	background-repeat: no-repeat;
 	line-height: 200px; text-align: center;
@@ -145,6 +276,59 @@ dformu .busca: focus{
 }
 
 /**************************/
+
+/*** Tutorial ****/
+
+#tutorial{
+	display:none;
+	position: absolute;
+	left:0px; top:0px;
+	width:100%; height:100%;
+	overflow: hidden;
+	cursor: pointer;
+}
+#tutorial .mv {
+	position: absolute;
+	left:44px; top:92px;
+	width: 1px; height: 1px;
+	background-image:url("/image/wheels.svg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.tutotext{
+	opacity: 0;
+	transition: all 2s ease-in;
+
+}
+.tuto1{
+	color:#000; font-size: 30px; font-weight: 500;
+	line-height: 24px;
+	text-shadow:
+		1px 1px 2pc #999,
+		2px 2px 17px #B8C7B2,
+		2px 2px 17px #CCC,
+		2px 2px 7px #CCC;
+}
+.tuto2{
+	color:#F50; font-size: 36px; line-height: 34px;
+	font-weight: bold;
+	text-shadow:
+		2px 2px 10px #929553,
+		2px 2px 17px #B8C7B2,
+		2px 2px 17px #CCC,
+		2px 2px 7px #CCC;
+}
+.tuto3{
+	color:#000; font-size: 26px; line-height: 64px;
+	font-weight: 300;
+	text-shadow:
+		2px 2px 17px #B8C7B2,
+		2px 2px 17px #B8C7B2;
+}
+
+
+/*****************/
  
 .formbase{
 	position:relative;
@@ -214,7 +398,8 @@ dformu .busca: focus{
 	position:absolute;
 	top:0px; width:100%; height:56px;
 	background-color: #263F40;
-	opacity:0.98;
+	opacity:0.98; color:#CCC;
+	overflow: hidden;
 }
 .logo {
 	position: relative;
@@ -224,13 +409,7 @@ dformu .busca: focus{
 	text-shadow: 1px 1px 3px #008A91;
 	letter-spacing:-2px;
 	cursor:default; 
-	-webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
+	
 }
 .logo > span {
 	font-weight: bold;
@@ -239,12 +418,24 @@ dformu .busca: focus{
 
 
 
-
 /*
- * Geral
- */
- 
+* Geral
+*/
+.r{ position: relative; }
+.wf{ width: 100%; }
+.pl{ padding-left: 10px;}
+.pr{ padding-right: 10px;}
 .off{ display:none }
+
+.no-select{
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
 
 .corner5{
 	-moz-border-radius: 5px;
