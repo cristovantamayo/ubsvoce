@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "geocoding",
-      "type": "com.cristovantamayo.ubsvoce.services.GeocodingService",
-      "sourceType": "com.cristovantamayo.ubsvoce.services.GeocodingService"
+      "type": "com.cristovantamayo.ubsvoce.controllers.rest.UnidadeResourceAPI",
+      "sourceType": "com.cristovantamayo.ubsvoce.controllers.rest.UnidadeResourceAPI"
     },
     {
       "name": "storage",
