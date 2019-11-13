@@ -47,6 +47,9 @@ public class GeocodingService {
 	
 	@Autowired
 	UnidadeRepository unidadeRepository;
+	
+	@Autowired
+	GeocodingUtil geocodingUtil;
 		
 	/**
 	 * Retorna lista de UBS dadas as Coordenadas e Raio de Acao (em metros)
@@ -56,10 +59,6 @@ public class GeocodingService {
 	 * @return <List<Unidade>> novaLista	--> Unidades dentro área de cobertura
 	 */
 	public List<Unidade> retrieveNearUbs(Double lat, Double lng, Double raioDeAcao, Integer page, Integer per_page){
-		
-		 
-		//TODO Salva os dados para posterior implementação de busca em banco
-		//saveLocation(formatedAddress, lat, lng);
 		
 		/**
 		 * PRIMEIRO FILTRO: Consulta ao Banco de Dados.
@@ -77,11 +76,11 @@ public class GeocodingService {
 		 * ordernação por proximidade em seguida o strem é convertido ao seu tipo inicial List<>
 		 */
 		
-		GeocodingUtil util = new GeocodingUtil();
+		
 		
 		Stream<Unidade> stream = lista.stream();
-		List<Unidade> novaLista = stream.filter(unidade -> util.isNear(unidade, lat, lng, raioDeAcao))
-				.map(u -> {return new Unidade(u, util.calculaDistancia(lat, lng,u.getGeocode().getGeocode_lat(), u.getGeocode().getGeocode_long()));})
+		List<Unidade> novaLista = stream.filter(unidade -> geocodingUtil.isNear(unidade, lat, lng, raioDeAcao))
+				.map(u -> {return new Unidade(u, geocodingUtil.calculaDistancia(lat, lng,u.getGeocode().getGeocode_lat(), u.getGeocode().getGeocode_long()));})
 				.sorted((ubs1, ubs2) -> { return Double.compare(ubs1.getDistance(), ubs2.getDistance()); })
 				.collect(Collectors.toList());
 		 

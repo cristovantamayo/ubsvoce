@@ -1,9 +1,12 @@
 package com.cristovantamayo.ubsvoce.services;
+import org.springframework.stereotype.Service;
+
 /**
  * Class ontendo o modelo matemáticos para o calculo em pares de Geocoordenadas
  */
 import com.cristovantamayo.ubsvoce.entities.Unidade;
 
+@Service
 class GeocodingUtil{
 	
 	public GeocodingUtil() {
