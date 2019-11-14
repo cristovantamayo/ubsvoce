@@ -19,7 +19,7 @@ Uma vez que o CSV contém <i>Latitude</i> e <i>Logitude</i> de cade UBS, o proce
 E viva o Google! **\o/**
 
 # Tecnologia
-Esta é uma aplicação Java, ou melhor, esta á uma aplicação cujo o Back-end é desenvolvido em Java fazendo uso do aclamado trio de desenvolvimento Spring Boot, Hibernate e JPA, apresentado endpoints tanto para consumo das interfaces com o usuário quanto da saída REST da API. O Front-end mais mais é que html, javascript (jQuery), css e... photoshop. 
+Esta é uma aplicação Java, ou melhor, esta á uma aplicação cujo o Back-end é desenvolvido em Java fazendo uso do aclamado trio de desenvolvimento Spring Boot, Hibernate e JPA, apresentando endpoints tanto para consumo das interfaces com o usuário quanto para a saída REST da API. O Front-end nada mais é que html, javascript (jQuery), css e... photoshop. 
 
 Aqui vamos focar nosso entendimento no Back-end da Aplicação:
 
@@ -32,7 +32,9 @@ A tabela Locais existe, mas neste primeiro momento apenas coleta dados, seu uso 
 
 ## Camadas da Aplicação
 
+
 ![enter image description here](http://webconstrutores.com/ubsvoce/camadas-da-aplicacao-ubsvoce.jpg)
+
 
 Seguindo a linha da tecnologia acima citada temos:
 
