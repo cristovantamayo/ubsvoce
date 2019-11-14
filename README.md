@@ -26,7 +26,7 @@ Aqui vamos focar nosso entendimento no Back-end da Aplicação:
 # Arquitetura
 ## Diagrama de Classes
 A Estrutura do Banco de Dados (<i>Relacional</i>) é pequena ...<u>e poderia ser ainda mais</u>. Mas visando um <u>futuro aperfeiçoamento</u> e <u>recursos adicionais<u> a modelagem tomou a seguinte forma:
-![enter image description here](http://webconstrutores.com/ubsvoce/ddiagrama-ubsvoce.jpg)
+![enter image description here](http://webconstrutores.com/ubsvoce/diagrama-ubsvoce.jpg)
 
 A tabela Locais existe, mas neste primeiro momento apenas coleta dados, seu uso ainda está em fazem de experimentação: muitas consultas à API poderam ser poupadas.
 
