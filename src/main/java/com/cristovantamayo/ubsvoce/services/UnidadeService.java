@@ -28,9 +28,9 @@ public class UnidadeService {
 	private UnidadeRepository repository;
 
 	/**
-	 * Retorna a Unidade específica
-	 * @param id
-	 * @return Unidade
+	 * Retorna a Unidade (UBS) específica
+	 * @param id identificacao numerica da Unidade UBS
+	 * @return Unidade objeto Unidade (UBS)
 	 */
 	public Unidade find(Integer id) {
 		Long idl = new Long(id);
@@ -40,8 +40,8 @@ public class UnidadeService {
 	}
 
 	/**
-	 * Persiste uma Unidade
-	 * @param unidade
+	 * Persiste uma Unidade (UBS)
+	 * @param unidade objeto Unidade
 	 */
 	public void add(Unidade unidade) {
 		repository.save(unidade);
@@ -49,7 +49,7 @@ public class UnidadeService {
 
 	/**
 	 * Persiste uma lista de Unidade atomicamente
-	 * @param lista
+	 * @param lista lista de unidades
 	 */
 	public void addAll(List<Unidade> lista) {
 		repository.saveAll(lista);
@@ -58,8 +58,8 @@ public class UnidadeService {
 	
 	/**
 	 * Ponto de entrada do arquivo CSV após upload
-	 * @param file
-	 * @return Long <n> linhas
+	 * @param file arquivo CSV, normalmente 'ubs.csv'
+	 * @return Long numero de linhas processadas
 	 */
 	public Long addCSVFile(File file) {
 		if(file.isFile()) {
@@ -106,19 +106,19 @@ public class UnidadeService {
 	}
 	
 	/**
-	 * Simple verificação da primeira linha no padrão do arquivo
-	 * @param header
-	 * @return boolean
+	 * Simples verificacao da primeira linha no padrao do arquivo
+	 * @param header primeira linha do arquivo CVS
+	 * @return boolean se conferir com o padrao retorna TRUE, se nao FALSE.
 	 */
-	public boolean checkCSVHeader(String header) {
+	private boolean checkCSVHeader(String header) {
 		return true; //header.equals("vlr_latitude,vlr_longitude,cod_munic,cod_cnes,nom_estab,dsc_endereco,dsc_bairro,dsc_cidade,dsc_telefone,dsc_estrut_fisic_ambiencia,dsc_adap_defic_fisic_idosos,dsc_equipamentos,dsc_medicamentos");
 	}
 
 	
 	/**
 	 * Instancia a Unidade completa com base nos registro de entrada
-	 * @param <String[]> registro
-	 * @return <Unidade> unidade
+	 * @param registro array de string equivalente a uma (1) linha do arquivo.
+	 * @return unidade retorna objeto instanciado da Unidade (UBS)
 	 * 
 	 * sequencial conhecida dos registros
 	 * 

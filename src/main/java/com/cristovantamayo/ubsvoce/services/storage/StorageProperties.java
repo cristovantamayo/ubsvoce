@@ -16,16 +16,16 @@ public class StorageProperties {
     private String location;
     
     /**
-     * Recupera o caminho do diretório root do Storage
-     * @return String location
+     * Recupera o caminho do diretorio root do Storage
+     * @return location path raiz do Storage
      */
     public String getLocation() {
         return location;
     }
 
     /**
-     * Registra o diretório root do Storage
-     * @param String location
+     * Registra o diretorio root do Storage
+     * @param location path raiz do Storage
      */
     public void setLocation(String location) {
         this.location = location;

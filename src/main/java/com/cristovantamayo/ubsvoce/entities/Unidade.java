@@ -45,8 +45,8 @@ public class Unidade implements Serializable {
 	private String phone;
 	
 	/**
-	 * Atributo não persistido
-	 * distance será atribuido no processo de Geolocalização {@see GeocodingService} 
+	 * Atributo nao persistido
+	 * distance sera atribuido no processo de Geolocalizacao @see GeocodingService 
 	 */
 	@Transient
 	private Double distance;

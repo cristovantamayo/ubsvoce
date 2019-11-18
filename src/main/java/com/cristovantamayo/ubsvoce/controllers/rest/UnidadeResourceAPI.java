@@ -19,14 +19,13 @@ import com.cristovantamayo.ubsvoce.services.GeocodingService;
 import com.cristovantamayo.ubsvoce.services.UnidadeService;
 import com.google.maps.model.GeocodingResult;
 
-import net.bytebuddy.implementation.bytecode.constant.DefaultValue;
 /**
- * Endpoint da API de UBSVocê
+ * Endpoint REST:  
+ * Fornece a URL de consulta para a API UBSVoce
  * @author Cristovan
  *
  */
 @RestController
-
 @RequestMapping("/v1")
 @EnableConfigurationProperties
 @ConfigurationProperties("geocoding")
@@ -34,7 +33,12 @@ public class UnidadeResourceAPI {
 
 	// Google API Key
 	private String apiKey;
-
+	/**
+	 * Credencial da API do Google: 
+	 * A Credencial pode ser registrada do arquivo de propriedades da aplicacao usando a tag "geocoding.apiKey" para ser injetada automaticamente no codigo.
+	 * 
+	 * @param apiKey Credencial fornecida pela API do Google.
+	 */
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
 	}
@@ -48,13 +52,13 @@ public class UnidadeResourceAPI {
 	@Autowired
 	GeocodingService geo;
 	/**
-	 * Entrypoint de Pesquisa da API UBSVoce, forneça um endereço válido
+	 * Entrypoint de pesquisa da API UBSVoce, deve ser fornecido um endereco textual valido.
 	 * 
-	 * @param <String> address			-	Endereço digitado pelo usuárop
-	 * @param <Double> radius			-	Raio de pesquisa em metros do ponto central, opcional, default 3000.0
-	 * @param <Integer> page			-	Indice da página quando em paginação, opcional, default 1
-	 * @param <Integer> per_page		-	Número de Unidade retornadas por página, opcional, default 50
-	 * @return <body>  
+	 * @param address			Endereco digitado pelo usuario
+	 * @param radiusString		Raio de pesquisa em metros do ponto central, opcional, default 3000.0 
+	 * @param pageString		Indice da pagina quando em paginacao, opcional, default 1 
+	 * @param per_pageString	N&uacute;mero de Unidade retornadas por p&aacute;gina, opcional, default 50
+	 * @return org.springframework.http.ResponseEntity.BodyBuilder.body  
 	 */									
 	@RequestMapping(path="/find_ubs", method=RequestMethod.GET)
 	public ResponseEntity<?> find_ubs(

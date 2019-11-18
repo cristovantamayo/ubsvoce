@@ -1,13 +1,9 @@
 package com.cristovantamayo.ubsvoce.services;
 
-
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.text.DecimalFormat;
 
 import org.hamcrest.core.IsSame;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +41,7 @@ public class GeocodingServiceTest {
     {
     	GeocodingResult[] result = null;
     	GeocodingResult[] result2 = null;// GeocodingService.searchAddress("Avenida Paulista, 1000", apiKey);
-    	assertThat(result, IsSame.sameInstance(result2));
+    	Assert.assertThat(result, IsSame.sameInstance(result2));
     }
     
     @Test
@@ -64,9 +60,8 @@ public class GeocodingServiceTest {
     public void deveArredondarCoordenada() {
     	DecimalFormat df = new DecimalFormat("#.00");
     	Double lat = Double.valueOf("-53.1061291694626");
-    	Double partial = Double.parseDouble(df.format(lat).replace(',', '.')); 
-    	System.out.println(partial);		
-    	assertEquals(-23.00, partial);
+    	double partial = Double.parseDouble(df.format(lat).replace(',', '.')); 
+    	Assert.assertEquals(-23.00, partial, 0.00001); 
     }
 
 }

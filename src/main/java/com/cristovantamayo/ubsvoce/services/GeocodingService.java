@@ -52,32 +52,33 @@ public class GeocodingService {
 	GeocodingUtil geocodingUtil;
 		
 	/**
-	 * Retorna lista de UBS dadas as Coordenadas e Raio de Acao (em metros)
-	 * @param <Double> lat   				--> latitude 
-	 * @param <Double> lng   				--> longitude 
-	 * @params <Double> raioDeAcao 			--> raio da área de cobertura (em Metros), distância entre o ponto centrar às suas extremidades 
-	 * @return <List<Unidade>> novaLista	--> Unidades dentro área de cobertura
+	 * Retorna lista de Unidades (UBS) dadas as Coordenadas e Raio de Acao (em metros)
+	 * 
+	 * @param lat   		coordenada latitude 
+	 * @param lng   		coordenada longitude 
+	 * @param raioDeAcao 	raio da area de cobertura (em Metros), distancia entre o ponto centrar as suas extremidades
+	 * @param page			numero da pagina a ser exibida: quando em paginacao
+	 * @param per_page		numero de maximo de unidade para ser exibido por pagina: quando em paginacao  
+	 * @return novaLista	Lista de @type{Unidades} dentro area de cobertura
 	 */
 	public List<Unidade> retrieveNearUbs(Double lat, Double lng, Double raioDeAcao, Integer page, Integer per_page){
 		
 		/**
 		 * PRIMEIRO FILTRO: Consulta ao Banco de Dados.
-		 * Realiza uma busca por valores compatíveis com a porção inteira das coordenadas, restringe o range.
+		 * Realiza uma busca por valores compativeis com a porcao inteira das coordenadas, restringe o range.
 		 *
-		 * A técnica escolhida reduz o tempo de processamento em média 80% sem afetar a qualidade de resposta dentro
-		 * da proposta do software, ou seja, pesquisas por Endereços, Bairros e arredores. 
+		 * A tecnica escolhida reduz o tempo de processamento em media 80% sem afetar a qualidade de resposta dentro
+		 * da proposta do software, ou seja, pesquisas por Enderecos, Bairros e arredores. 
 		 * Lembrando que cada 'grau' corresponde (por meio de calculos) à 112,12 Km.
 		 */
 		List<Unidade> lista = unidadeRepository.findPartialByLatAndLng((double) Math.round(lat), (double) Math.round(lng));
+		
 		/**
 		 * SEGUNDO FILTRO: Filtragem por proximidade.
-		 * Programação funcional
-		 * Uma vez stream, é aplicado o filtro do 'raioDeAcao' em pipeline com
-		 * ordernação por proximidade em seguida o strem é convertido ao seu tipo inicial List<>
+		 * Programacao funcional
+		 * Uma vez stream, eh aplicado o filtro do 'raioDeAcao' em pipeline com
+		 * ordernacao por proximidade em seguida o strem eh convertido ao seu tipo inicial List<>
 		 */
-		
-		
-		
 		Stream<Unidade> stream = lista.stream();
 		List<Unidade> novaLista = stream.filter(unidade -> geocodingUtil.isNear(unidade, lat, lng, raioDeAcao))
 				.map(u -> {return new Unidade(u, geocodingUtil.calculaDistancia(lat, lng,u.getGeocode().getGeocode_lat(), u.getGeocode().getGeocode_long()));})
@@ -88,11 +89,11 @@ public class GeocodingService {
 		/**
 		 * IMPORTANTE - ATENCAO ///////
 		 *
-		 * Referente a Paginacao por se tratar de um processo 'hibrido' de pesquisa entre Base de Dados e filtragem programática,
-		 * não houve meio eficiente de limitacao de consulta no banco pois a filtragem subsequente defasa os limites de paginação estipulados.
-		 * Em último caso, na necessidade de se haver paginação, os limites serão realizados já com o resultado final em mãos.
-		 * Quando possível a opção de mais eficiente é usar valores altos em 'per_page' tratando a paginação com recursos do front-end, lembrando
-		 * que um retorno de pesquisa comum proposta pelo Aplicativo UBSVoce dificilmente retornará valores superiores a 50 Unidades por pesquisa.
+		 * Referente a Paginacao por se tratar de um processo 'hibrido' de pesquisa entre Base de Dados e filtragem programatica,
+		 * nao houve meio eficiente de limitacao de consulta no banco pois a filtragem subsequente defasa os limites de paginacao estipulados.
+		 * Em ultimo caso, na necessidade de se haver paginacao, os limites serao realizados ja com o resultado final em maos.
+		 * Quando possivel a opção de mais eficiente e usar valores altos em 'per_page' tratando a paginacao com recursos do front-end, lembrando
+		 * que um retorno de pesquisa comum proposta pelo Aplicativo UBSVoce dificilmente retornara valores superiores a 50 Unidades por pesquisa.
 		 */
 		
 		// Se nao tem per_page nem page, logo nao ha o que paginar, retorna lista
@@ -130,12 +131,12 @@ public class GeocodingService {
 	
 	
 	/**
-	 * Faz a requisição à API do Google buscando pelo endereço
+	 * Faz requisicao ah API do Google buscando pelo endereco textual
 	 * Script fornecido pelo Google: https://github.com/googlemaps/google-maps-services-java
 	 * 
-	 * @param <String> address
-	 * @param <String> apiKey --> Credencial Geocoding API Google
-	 * @return
+	 * @param address endereco textual fornecido pelo usuario
+	 * @param apiKey Credencial Geocoding API Google
+	 * @return GeocodingResult @type{GeocodingResult} resultado fornecido pela Geocoding API do Google
 	 */
 	public static GeocodingResult[] searchAddress(String address, String apiKey) {
 		GeoApiContext context = new GeoApiContext.Builder()
@@ -152,14 +153,13 @@ public class GeocodingService {
 	}
 	
 	/**
-	 * Salva em Banco a localização pesquisada
-	 * Uma vez registrada não será necessária a requisição ao serviços do Google.
-	 * TODO recurso não totalmente implemnetado.
-	 * @param formatedAddress
-	 * @param lat
-	 * @param lng
+	 * Salva em Banco a localizacao pesquisada
+	 * Uma vez registrada não sera necessária a requisicao ao servicos do Google.
+	 * TODO recurso nao totalmente implemnetado.
+	 * @param formatedAddress endereco textual formatado retornado pela API do Google. 
+	 * @param lat coordenada latitude
+	 * @param lng coordenada longitude
 	 */
-
 	private void saveLocation(String formatedAddress, Double lat, Double lng) {
 		Date searched_at = null;
 		localRepository.save(new Local(formatedAddress, lat, lng, searched_at));

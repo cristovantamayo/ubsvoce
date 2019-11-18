@@ -47,18 +47,18 @@ public enum ScoreType {
     }
     
     /**
-     * Retorna o Item do Enum pelo atributo <descricao> String
-     * @param texto
-     * @return
+     * Retorna o Item do Tipo Enumerado pelo atributo descricao @type{String}
+     * @param texto descricao forcecida pelo arquivo CSV nos campos de classificacao
+     * @return scoreType @type{ScoreType} Tipo Enumerado
      */
     public static ScoreType retrieve(String texto) {
     	return lookup.get(texto);
     }
     
     /**
-     * Retorna o Ìtem do Enum pelo atributo <valor> Integer
-     * @param value
-     * @return
+     * Retorna o Item do Tipo Enumerado pelo atributo valor @type{Integer}
+     * @param value indice numerico referente a posicao do Enum
+     * @return scoreType @type{ScoreType} Tipo Enumerado
      */
     public static ScoreType retrieveByValue(Integer value) {
     	return lookupI.get(value);

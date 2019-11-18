@@ -2,7 +2,7 @@ package com.cristovantamayo.ubsvoce.services.util;
 
 /**
  * A classes tem por objetivo dar suporte para o retorno lista menores a partir de uma lista maior.
- * Classe Auxiliar da paginação utilizada na classe de serviço {@see GeocodingService} no método {@see retrieveNearUbs}
+ * Classe Auxiliar da paginacao utilizada na classe de servico {@see GeocodingService} no metodo {@see retrieveNearUbs}
  * Abordagem de Lista de Listas com {@code AbstractLis<T>} parametrizada com {@code List<T>}
  */
 
@@ -18,28 +18,30 @@ public final class Paginador<T> extends AbstractList<List<T>> {
     private final int subListaSize;
 
     /**
-     * Construtor da pagina que estabelece a porção atual da lista
-     * @param <List<T>> lista
-     * @param <int> pedacoSize
+     * Construtor da pagina que estabelece a porcao atual da lista
+     * @param lista lista de tipo generico
+     * @param subListaSize numero de item de uma paginacao
      */
-    public Paginador(List<T> lista, int subListaSize) {
+    private Paginador(List<T> lista, int subListaSize) {
         this.lista = new ArrayList<>(lista);
         this.subListaSize = subListaSize;
     }
     
     /**
-     * Chamada estática instanciando a pagina da vez 
-     * @param lista 
-     * @param pedacoSize
-     * @return
+     * retorna instancia a pagina @type{List} da vez 
+     * @param lista lista de tipo generico
+     * @param subListaSize numero de item de uma paginacao
+     * @param <T> tipo do item da ser paginado
+     * @return paginador instancia de paginacao
      */
     public static <T> Paginador<T> ofSize(List<T> lista, int subListaSize) {
         return new Paginador<>(lista, subListaSize);
     }
     
     /**
-     * Retorna a sublista segundo o índice das sublistas
-     * @param <int> index
+     * Retorna a sublista segundo o indice da paginacao
+     * @param indice  indice numero @type{Integer} do array de paginas
+     * @return sublista retorna sublista reference ao indice do array de paginas
      */
     @Override
     public List<T> get(int indice) {
@@ -53,7 +55,7 @@ public final class Paginador<T> extends AbstractList<List<T>> {
         return new ArrayList<>(lista.subList(inicio, fim));
     }
     /**
-     * Retorna o numero total de sublistas do array de listas
+     * Retorna o numero total @{Integer} de sublistas do array de listas
      */
     @Override
     public int size() {

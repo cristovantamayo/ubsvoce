@@ -1,8 +1,8 @@
 package com.cristovantamayo.ubsvoce.controllers;
 
 /**
- * Controller exclusivo para a sessão de upload
- * Fornece os entrypoint para configuração inicial o aplicativo via http 
+ * Controller exclusivo para a sessao de upload
+ * Fornece os entrypoint para configuracao inicial o aplicativo via http 
  * @author Cristovan
  */
 import java.io.IOException;
@@ -30,7 +30,7 @@ import com.cristovantamayo.ubsvoce.services.StorageService;
 import com.cristovantamayo.ubsvoce.services.exceptions.StorageFileNotFoundException;
 
 /**
- * Forne acesso ao formulário de upload do CSV fonte de dados da aplicaçção
+ * Forne acesso ao formulario de upload do CSV fonte de dados da aplicacao
  * @author Cristovan
  *
  */
@@ -40,13 +40,22 @@ public class FileUploadController {
 
 	private final StorageService storageService;
 	
-	// Injeta Serviço do Storage
+	/**
+	 * Injecao da dependencia de Servico do Storage (Autowired)
+	 * @param storageService componente de servico do Storage
+	 */
 	@Autowired
 	public FileUploadController(StorageService storageService) {
 		this.storageService = storageService;
 	}
 	
-	// Interface UI de importação de arquivo CSV
+	/**
+	 * Interface UI com formulario de importacao do arquivo CSV
+	 * 
+	 * @param model componente model string framework
+	 * @return html pagina dinamica /import
+	 * @throws IOException excecao do Storage
+	 */
 	@RequestMapping(value="/import", method=RequestMethod.GET)
 	public String add_source(Model model) throws IOException {
 		
@@ -64,7 +73,12 @@ public class FileUploadController {
 		return "insert";
 	}
 	
-	// Prepara a referência dos arquivos carregados 
+	/**
+	 * Referencia html dos arquivos carregados
+	 *  
+	 * @param filename path do arquivo
+	 * @return html porcao html com listagemde arquivos carregados
+	 */
 	@GetMapping("/import/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
@@ -74,11 +88,16 @@ public class FileUploadController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 	
-	// End Point de Carregamento
+	/**
+	 * End Point de Upload de arquivos
+	 * 
+	 * @param file arquivo enviado
+	 * @param redirectAttributes componente para atributos do redirecionamento
+	 * @return redirect redirecionamento pra o fomulario envio.
+	 */
 	@PostMapping("/import/uploader")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes) {
-		
 		// Armazena
         storageService.store(file);
         
@@ -90,7 +109,11 @@ public class FileUploadController {
         return "redirect:/config/import";
     }
 	
-	// Tratando exceções referente ao Storage
+	/**
+	 * Tratamento de excecao referente ao Storage
+	 * @param exc excecao do Storage
+	 * @return entidade de resposta 404
+	 */
 	@ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
