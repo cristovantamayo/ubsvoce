@@ -28,14 +28,29 @@
 			<!-- Menu superior -->
 			<div class="menu shadow">
 				<nav>
-					<div class="r wf" style="padding: 0px;">
-						<div class="col-xs-12">
+					<div class="row-fluid">
+						<div class="col-12">
 							<span class="logo no-select" title="Unidade Básica de Saúde e Você!"><span>UBS</span> Voc&ecirc;</span>
+							<div class="a iline vtop ri0">
+								<div class="iline ate">at&eacute;:</div>
+								<div class="dropdown iline">
+									<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Raio de Busca">
+									  3000m
+									</button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+									  <a class="dropdown-item" href="#">1500m</a>	
+									  <a class="dropdown-item" href="#">3000m</a>
+									  <a class="dropdown-item" href="#">5000m</a>
+									  <a class="dropdown-item" href="#">10000m</a>
+									</div>
+								</div>
+								<button class="iline btAbout" title="O que eu preciso saber?"></button>
+							</div>
 						</div>
-						<input type="hidden" id="page" value="1" />
-						<input type="hidden" id="per_page" value="50" />
 					</div>
 				</nav>
+				<input type="hidden" id="page" value="1" />
+				<input type="hidden" id="per_page" value="50" />
 			</div>
 			<!-- sidebar flutuante -->
 			<div id="flyer">
@@ -98,6 +113,7 @@
 		<script th:src="@{/webjars/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js}"></script>
 		<script th:src="@{/webjars/js-cookie/2.2.1/js.cookie.min.js}"></script>
 		<script th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
 		<!-- Bootstrap core JavaScript
 	    ================================================== -->
 		<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
@@ -428,6 +444,30 @@
 				// Incial com o campo de busca vazio.
 				$("#txtBusca").val("");
 				
+				//////////////// MENU /////////////////////////////////////////////////////////////////
+				//
+				$('.dropdown-toggle').dropdown();
+				$("#dropdownMenuButton").closest("div.dropdown").find("a.dropdown-item").each(function(){
+					$(this).click(function(e){
+						var $value = $(this).html();
+						$("#dropdownMenuButton").html($value);
+						if(emCursoFlag){
+							completelyRemoveResults(true, function(){
+								buscar($("#txtBusca").val());
+							});
+						}
+						
+					});
+				});
+				//
+				// Botao de Ajuda
+				$("button.btAbout").click(function(e){
+					e.preventDefault();
+					tutorialInit();
+				})
+				//
+				////////////// FIM - MENU /////////////////////////////////////////////////////////////
+
 				///////// Funcoes auxiliares do comportamento do MAPA /////////////////////////////////
 				//
 				//
@@ -567,6 +607,22 @@
 					map.setZoom(14);
 				}
 				//
+				// Removendo completamente os resultados de pesquisa
+				var completelyRemoveResults = function(flagSkipAddress, $callback){
+					removeRanking();
+					removeMarcadores();
+					
+					if(undefined==flagSkipAddress){
+						$("#txtBusca").val("");
+						$("#txtBusca").focus();
+						emCursoFlag = false;
+					} else {
+						if(undefined!=$callback){
+							$callback();
+						}
+					}
+				}
+				//
 				// Funcao que troca a comuta as funcoes do btForm: TRUE se bt-close, ANY OTHER ELSE bt-enter 
 				var changeFormBt = function($flag){
 					var bt = $("#btForm");
@@ -579,14 +635,11 @@
 
 							if(emCursoFlag==true){
 								if(!window.confirm("Você está prestes a descarta a pesquisa altual.\nDeseja prosseguir?")) return false;
-								removeRanking();
-								removeMarcadores();
+								completelyRemoveResults();
 							}
 							//
 							// Desarma o timeToLeave
 							clearTimeout($timeToLeave);
-							$("#txtBusca").val("");
-							$("#txtBusca").focus();
 						});
 					} else {
 						bt.removeClass("bt-close");
@@ -611,7 +664,7 @@
 					// Argumentos de Pesquisa
 					var $params = {
 						address: address,
-						radius: 3000,
+						radius: $("#dropdownMenuButton").html().replace("m", ""),
 						page: 1,
 						per_page: 50
 					};
@@ -633,7 +686,7 @@
 						//
 						// Testa o conteudo
 						if(undefined==$data || null==$data){
-							alert("Nada encontrado!");
+							alert("Nenhum resultado para a pesquisa.");
 							return false;
 						}
 						//
@@ -642,11 +695,11 @@
 						// Recupera total encontrado
 						var $totalEncontrado = $data.total_entries;
 						//
+						// Sinaliza busca em Curso
+						emCursoFlag = true;
+						//
 						// Havendo UBS
 						if($data.entries.length>0){
-							//
-							// Sinaliza busca em Curso
-							emCursoFlag = true;
 							//
 							// remove os Marcadores da Consulta anterior
 							removeMarcadores();
@@ -670,7 +723,7 @@
 							// Ativa o botao limpar do campo de busca
 							changeFormBt(true);
 						} else {
-							alert("Não há UBSs na localidade!");
+							alert("Não há UBSs localizadas no Raio de "+$("#dropdownMenuButton").html()+" do local informado.");
 						}
 					});
 				}
@@ -734,7 +787,7 @@
 				// remove
 				var removeTutorial = function(){
 					$("#tutorial").fadeOut("slow", function(){
-						this.remove();
+						
 					});
 				};
 				//
@@ -785,6 +838,11 @@
 								texto.css({opacity:1});
 								texto.click(function(e){
 									e.preventDefault();
+									//
+									if(undefined==Cookies.get("notnewer")){
+										Cookies.set("notnewer", "ok", { expires: 2});
+										timer = setTimeout(tutorialInit, 1500);
+									}
 									removeTutorial();
 								})
 								
@@ -792,11 +850,7 @@
 						}
 					);
 				}
-				//
-				if(undefined==Cookies.get("notnewer")){
-					Cookies.set("notnewer", "ok", { expires: 2});
-					timer = setTimeout(tutorialInit, 1500);
-				}
+				
 				//
 				/////////// TUTORIAL - FIM ////////////////////////////////////////////////////////////
 				
@@ -1004,7 +1058,10 @@
 				// Remover Ranking
 				var removeRanking = function(){
 					$('#dlist').fadeOut("fast", function(){
+						$("#dlist").css({height: "1px"});
+						$("#dlist").css({height: "auto"});
 						$('#dlist .dubs').html("");
+						$("#dlist").slimScroll({destroy: true});
 					});
 				}
 				//

@@ -1,6 +1,12 @@
 /*
  * Base structure
  */
+ 
+ .gnd{
+	position: relative;
+	width:100%; height:100%;
+	background-color: #EEE;
+}
 html, body {
 	height: 100%;
 	margin: 0;
@@ -39,11 +45,7 @@ textarea:focus, input:focus, select:focus {
  * Elementos personalizados
  */
 
-.gnd{
-	position: relative;
-	width:100%; height:100%;
-	background-color: #AAA;
-}
+
 
 #map {
 	height: 100%;
@@ -127,7 +129,7 @@ textarea:focus, input:focus, select:focus {
 }
 
 /*** LISTAGEM DE UBS ***/
-#dlist{ margin:5px 0px 0px 0px;  font-size: 12px; overflow:hidden; background: url("/image/gnd-form.png") left top repeat-y; transition: all 0.3s ease-out;}
+#dlist{ margin:5px 0px 0px 0px; min-height:1px; font-size: 12px; overflow:hidden; background: url("/image/gnd-form.png") left top repeat-y; transition: all 0.3s ease-out;}
 #dlist .dubs {
 	padding: 0px 0px 4px 0px;
 	max-width:100%;
@@ -399,7 +401,7 @@ textarea:focus, input:focus, select:focus {
 	top:0px; width:100%; height:56px;
 	background-color: #263F40;
 	opacity:0.98; color:#CCC;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 .logo {
 	position: relative;
@@ -415,18 +417,66 @@ textarea:focus, input:focus, select:focus {
 	font-weight: bold;
 	letter-spacing:-2px;
 }
+.menu .btAbout{
+	width:40px; height:40px;
+	border: none;
+	background: url("/image/about.png") no-repeat center;
+	margin: 8px 20px 0px 10px;
+	vertical-align: top;
+	opacity: 0.5;
+	transition: all 0.2s ease-out;
+}
+.menu .btAbout:hover{
+	opacity:0.8;
+}
 
+.menu div.dropdown{
+	position: relative; top: 0px; margin:8px 0px 0px 0px; vertical-align: top;
+}
+.menu div.dropdown > button {
+	border: none;
+	background-color: #273F3F; color: #9CE9C3; font-size:16px;
+	box-shadow: 2px 1px 1px #000;
+	transition: all 0.2s ease-out;
+}
+.menu div.dropdown > button:hover {
+	border: none;
+	background-color: #172F2F; color: #6CB993; font-size:16px;
+}
+.menu div.dropdown-menu{
+	background-color: #172F2F; 
+}
+
+.menu a.dropdown-item {
+	color: #6CB993; font-size:16px;
+	background-color: #172F2F;
+	transition: all 0.2s ease-out;
+}
+.menu a.dropdown-item:hover {
+	background-color: #374F4F; color: #8CD9B3; font-size:16px;
+}
+
+
+div.ate{
+	width:30px; height:40px; text-align: center; line-height: 40px;
+	margin: 6px 0px 0px 0px;
+	color: #9CE9C3; font-size: 16px;
+}
 
 
 /*
 * Geral
 */
+.a{ position: absolute; }
 .r{ position: relative; }
 .wf{ width: 100%; }
 .pl{ padding-left: 10px;}
 .pr{ padding-right: 10px;}
 .off{ display:none }
-
+.iline{ display: inline-block; }
+.vtop{ vertical-align: top; }
+.ri0{ right:0px; }
+.ri10{ right:10px; }
 .no-select{
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
