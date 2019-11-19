@@ -1013,7 +1013,7 @@
 				var addUbsline = function(ubs, numeracao){
 					
 					var $templatePadrao = '<div id="ubsline_'+numeracao+'" class="ubsline" data-id="'+ubs.id+'"><div class="ilb le bbr">'+numeracao+'</div><div class="ilb ld ldhn bbr"><div class="lname ldd">'+ubs.name+'</div><div class="ldistance ldd">'+trataDistancia(ubs.distance)+'<br /><span>metros</span></div></div></div>';
-					var $templateWinner = '<div id="ubsline_'+numeracao+'" class="ubsline" data-id="'+ubs.id+'"><div class="ilb le bbw">2</div><div class="ilb ld ldhs"><div class="lname ldd">'+ubs.name+'</div><div class="ldistance ldd">'+trataDistancia(ubs.distance)+'<br /><span>metros</span></div></div> <div id="checkout">Unidade mais Próxima</div> </div>';
+					var $templateWinner = '<div id="ubsline_'+numeracao+'" class="ubsline" data-id="'+ubs.id+'"><div class="ilb le bbw">1</div><div class="ilb ld ldhs"><div class="lname ldd">'+ubs.name+'</div><div class="ldistance ldd">'+trataDistancia(ubs.distance)+'<br /><span>metros</span></div></div> <div id="checkout">Unidade mais Próxima</div> </div>';
 					var $template =  1 == numeracao ? $templateWinner : $templatePadrao;
 					$("#dlist .dubs").append($template);
 				}
