@@ -1,6 +1,5 @@
 package com.cristovantamayo.ubsvoce.services;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -15,8 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-
-//@ContextConfiguration(interfaces = UnidadeRepository.class)
 @EnableJpaRepositories("com.cristovantamayo.ubsvoce.repositories.UnidadeRepository")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -24,13 +21,10 @@ public class UnidadeServiceTest {
 	
 	
 	@Autowired
-	private UnidadeService unidadeService;
-	
-	@Autowired
 	private WebApplicationContext webApplicationContext;
 
     @Test
-    public void deve() throws Exception {
+    public void deveSimularUpload() throws Exception {
     	
     	String content = "vlr_latitude,vlr_longitude,cod_munic,cod_cnes,nom_estab,dsc_endereco,dsc_bairro,dsc_cidade,dsc_telefone,dsc_estrut_fisic_ambiencia,dsc_adap_defic_fisic_idosos,dsc_equipamentos,dsc_medicamentos\r\n" + 
     			"-10.9112370014188,-37.0620775222768,280030,3492,US OSWALDO DE SOUZA,TV ADALTO BOTELHO,GETULIO VARGAS,Aracaju,7931791326,Desempenho acima da média,Desempenho muito acima da média,Desempenho mediano ou  um pouco abaixo da média,Desempenho acima da média\r\n" + 
@@ -44,14 +38,6 @@ public class UnidadeServiceTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart("http://localhost:8080/import/uploader")
                         .file(file))
                     .andExpect(status().is(200));
-                    //.andExpect(content().string("success"));
     }
-    
-	@Test
-	public void deveChecarPrimeiraLinhaDoArquivoCSV() {
-
-		String header = "vlr_latitude,vlr_longitude,cod_munic,cod_cnes,nom_estab,dsc_endereco,dsc_bairro,dsc_cidade,dsc_telefone,dsc_estrut_fisic_ambiencia,dsc_adap_defic_fisic_idosos,dsc_equipamentos,dsc_medicamentos";
-		assertTrue(unidadeService.checkCSVHeader(header));
-	}
 	
 }

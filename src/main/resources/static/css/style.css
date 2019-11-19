@@ -410,7 +410,7 @@ textarea:focus, input:focus, select:focus {
 	padding: 10px 10px 7px 8px;
 	text-shadow: 1px 1px 3px #008A91;
 	letter-spacing:-2px;
-	cursor:default; 
+	cursor:pointer;
 	
 }
 .logo > span {
