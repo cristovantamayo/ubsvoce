@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+*.jar.original
 *.war
 *.nar
 *.ear
@@ -25,5 +26,12 @@ hs_err_pid*
 # Eclipse
 .classpath
 .project
+.settings/*
 
-target/
+target
+HELP.md
+.factorypath
+
+# Maven
+.mvn/*
+mvn*
