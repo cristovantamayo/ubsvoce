@@ -14,6 +14,8 @@ services:
             - "3306:3306"
         networks:
             - ubsvoce-networks
+        volumes:
+            - d:\projetos\mysql:/var/lib/mysql
 
     ubsvoce-docker-to-aws-with-java:
         image: ubsvoce-docker-to-aws-with-java
@@ -33,6 +35,8 @@ services:
             - db
         networks:
             - ubsvoce-networks
+        volumes:
+            - d:\projetos\upload-dir:/upload-dir
 
 networks:
     ubsvoce-networks:
