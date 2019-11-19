@@ -603,8 +603,25 @@
 					//
 					// Centraliza o MAPA
 					map.panTo(center);
+					//
+					// Ajusta o zoom segundo a raio de acao da busca
+					var $zoom = 14;
+					// recurepa o valor selecionado no dropdown
+					var $adjustedDistante = parseInt($("#dropdownMenuButton").html().replace("m", ""));
+					// Se for um numero valido
+					if(!isNaN($adjustedDistante)){
+						//se for igual ou superior a 5000 metros mas menor que 10000 metros
+						if($adjustedDistante>=5000 && $adjustedDistante<10000){
+							// setar zoom para 13
+							$zoom = 13;
+						} else if($adjustedDistante>=10000){
+							// setar zoom para 12
+							$zoom = 12;
+						}
+					}
+					//
 					// Seta o ZOOM
-					map.setZoom(14);
+					map.setZoom($zoom);
 				}
 				//
 				// Removendo completamente os resultados de pesquisa
