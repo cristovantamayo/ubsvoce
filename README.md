@@ -9,7 +9,7 @@ O projeto jaz uso de outros projetos e serviços como, por exemplo, as APIs [Geo
 
 Além sa fonte da informação relativa a geolocalização provida pela API do Google, também se faz uso dos dados fornecidos pelo **Portal Brasileiro de Dados Abertos** ([ubs.csv](http://dados.gov.br/dataset/unidades-basicas-de-saude-ubs)).
 
-Uma vez que o CSV contém <i>Latitude</i> e <i>Logitude</i> de cade UBS, o processo lógico para se obter o resultado esperado é relativamente simple, podendo quer descrito em poucos passos:
+Uma vez que o CSV contém <i>Latitude</i> e <i>Logitude</i> de cade UBS, o processo lógico para se obter o resultado esperado é relativamente simple, podendo ser descrito em poucos passos:
 
 * Receber a consulta via formulário \<String>
 * Encaminhar a consulta à **Geocoding API**  \<String> e tratar o rico response \<GeocodingResult[]> extraindo o que convês, incluvice as Geocoordenadas (lat, lng).
@@ -26,14 +26,14 @@ Aqui vamos focar nosso entendimento no Back-end da Aplicação:
 # Arquitetura
 ## Diagrama de Classes
 A Estrutura do Banco de Dados (<i>Relacional</i>) é pequena ...<u>e poderia ser ainda mais</u>. Mas visando um <u>futuro aperfeiçoamento</u> e <u>recursos adicionais<u> a modelagem tomou a seguinte forma:
-![enter image description here](http://webconstrutores.com/ubsvoce/diagrama-ubsvoce.jpg)
+![enter image description here](http://webconstrutores.com.br/ubsvoce/diagrama-ubsvoce.jpg)
 
 A tabela Locais existe, mas neste primeiro momento apenas coleta dados, seu uso ainda está em fazem de experimentação: muitas consultas à API poderam ser poupadas.
 
 ## Camadas da Aplicação
 
 
-![enter image description here](http://webconstrutores.com/ubsvoce/camadas-da-aplicacao-ubsvoce.jpg)
+![enter image description here](http://webconstrutores.com.br/ubsvoce/camadas-da-aplicacao-ubsvoce.jpg)
 
 
 Seguindo a linha da tecnologia acima citada temos:
@@ -159,4 +159,4 @@ Seguindo a linha da tecnologia acima citada temos:
 
 ## API /v1/find_ubs
 
-![enter image description here](http://webconstrutores.com/ubsvoce/api-rest.jpg)
+![enter image description here](http://webconstrutores.com.br/ubsvoce/api-rest.jpg)
