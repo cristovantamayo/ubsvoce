@@ -1,4 +1,4 @@
-![Logo UBSVoce](http://webconstrutores.com/ubsvoce/favicon.png)
+![Logo UBSVoce](http://webconstrutores.com.br/ubsvoce/favicon.png)
 # UBSVoce
 
 Seja bem-vindo ao projeto **UBSVoce**.
